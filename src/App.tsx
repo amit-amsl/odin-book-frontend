@@ -3,8 +3,12 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
+import LoginRoute from './routes/auth/login';
+import RegisterRoute from './routes/auth/register';
+import FeedRoute from './routes/app/feed';
 
 declare module '@tanstack/react-query' {
   interface Register {
@@ -34,7 +38,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="login" element={<LoginRoute />} />
+          <Route path="register" element={<RegisterRoute />} />
+          <Route path="feed" element={<FeedRoute />} />
+
+          <Route path="*" element={<Navigate to="feed" />} />
         </Routes>
       </BrowserRouter>
       {DEV_MODE && <ReactQueryDevtools initialIsOpen={false} />}
