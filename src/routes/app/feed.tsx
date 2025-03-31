@@ -1,13 +1,17 @@
-import { Button } from '@/components/ui/button';
+import { AppSidebar } from '@/components/app-sidebar';
+import { SiteHeader } from '@/components/site-header';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 
 export default function FeedRoute() {
   return (
-    <div className="bg-background min-h-dvh w-full">
-      <nav className="flex max-w-3xs flex-col items-end justify-center gap-2">
-        <Button variant={'link'}>Home</Button>
-        <Button variant={'link'}>Feed</Button>
-        <Button variant={'link'}>Profile</Button>
-      </nav>
+    <div className="[--header-height:calc(theme(spacing.14))]">
+      <SidebarProvider className="flex flex-col">
+        <SiteHeader />
+        <div className="flex flex-1">
+          <AppSidebar />
+          <SidebarInset></SidebarInset>
+        </div>
+      </SidebarProvider>
     </div>
   );
 }
