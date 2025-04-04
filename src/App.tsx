@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import LoginRoute from './routes/auth/login';
 import RegisterRoute from './routes/auth/register';
 import FeedRoute from './routes/app/feed';
+import { AppRoot } from './routes/app/app-root';
 
 declare module '@tanstack/react-query' {
   interface Register {
@@ -40,9 +41,12 @@ function App() {
         <Routes>
           <Route path="login" element={<LoginRoute />} />
           <Route path="register" element={<RegisterRoute />} />
-          <Route path="feed" element={<FeedRoute />} />
+          <Route path="/" element={<AppRoot />}>
+            <Route path="feed" element={<FeedRoute />} />
+            <Route path="c/:communityName" />
+          </Route>
 
-          <Route path="*" element={<Navigate to="feed" />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
       {DEV_MODE && <ReactQueryDevtools initialIsOpen={false} />}
