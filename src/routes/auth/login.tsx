@@ -1,3 +1,3 @@
-export default function LoginRoute() {
+export function LoginRoute() {
   return <div></div>;
 }

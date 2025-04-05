@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { ArrowBigDown, ArrowBigUp } from 'lucide-react';
 import { Link } from 'react-router';
 
-export default function FeedRoute() {
+export function FeedRoute() {
   return (
     <ScrollArea className="">
       <div className="flex flex-col gap-2 p-4">

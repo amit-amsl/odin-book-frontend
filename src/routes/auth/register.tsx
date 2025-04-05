@@ -1,3 +1,3 @@
-export default function RegisterRoute() {
+export function RegisterRoute() {
   return <div></div>;
 }

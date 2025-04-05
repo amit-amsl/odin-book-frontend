@@ -6,10 +6,11 @@ import {
 import { AxiosError } from 'axios';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
-import LoginRoute from './routes/auth/login';
-import RegisterRoute from './routes/auth/register';
-import FeedRoute from './routes/app/feed';
+import { LoginRoute } from './routes/auth/login';
+import { RegisterRoute } from './routes/auth/register';
+import { FeedRoute } from './routes/app/feed';
 import { AppRoot } from './routes/app/app-root';
+import { CommunityRoute } from './routes/c/community';
 
 declare module '@tanstack/react-query' {
   interface Register {
@@ -43,7 +44,7 @@ function App() {
           <Route path="register" element={<RegisterRoute />} />
           <Route path="/" element={<AppRoot />}>
             <Route path="feed" element={<FeedRoute />} />
-            <Route path="c/:communityName" />
+            <Route path="c/:communityName" element={<CommunityRoute />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" />} />
