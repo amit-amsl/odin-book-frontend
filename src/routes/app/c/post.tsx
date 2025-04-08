@@ -1,10 +1,15 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
 import { ArrowBigUp, ArrowBigDown, MessageCircle, Share2 } from 'lucide-react';
 
 export function PostRoute() {
   return (
-    <div className="max-w-3xl p-4">
+    <div className="flex max-w-3xl flex-col gap-4 p-4">
       <div className="flex flex-col gap-4">
         <div className="flex gap-2">
           <Avatar className="size-10">
@@ -14,7 +19,7 @@ export function PostRoute() {
           <div className="flex flex-col">
             <div className="flex gap-2">
               <h2 className="text-sm font-semibold">r/skrillex</h2>
-              <small className="text-muted-foreground">3 hr ago</small>
+              <time className="text-muted-foreground">3 hr ago</time>
             </div>
             <p className="text-xs">johndoejohnjon</p>
           </div>
@@ -72,6 +77,186 @@ export function PostRoute() {
           </Button>
         </div>
       </div>
+      <Collapsible>
+        <CollapsibleTrigger className="flex items-center gap-1">
+          <Avatar className="size-8">
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <span className="text-xs font-semibold">Frequent_Calendar810</span>
+          <span>•</span>
+          <time className="text-muted-foreground text-xs">11h ago</time>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="ml-9 flex flex-col gap-3">
+          <p className="text-sm">
+            Yes. Free to use for personal and commercial projects. No
+            attribution required.
+          </p>
+          <div className="flex gap-2">
+            <div className="flex items-center gap-1">
+              <Button
+                asChild
+                className="size-7"
+                variant={'ghost'}
+                size={'icon'}
+              >
+                <ArrowBigUp
+                  strokeWidth={1.2}
+                  className="hover:stroke-amber-400"
+                />
+              </Button>
+              <span className="text-sm font-semibold">1.2k</span>
+              <Button
+                asChild
+                className="size-7"
+                variant={'ghost'}
+                size={'icon'}
+              >
+                <ArrowBigDown
+                  strokeWidth={1.2}
+                  className="hover:stroke-indigo-400"
+                />
+              </Button>
+            </div>
+            <Button variant={'ghost'}>
+              <MessageCircle />
+              Reply
+            </Button>
+          </div>
+          <Collapsible>
+            <CollapsibleTrigger className="flex items-center gap-1">
+              <Avatar className="size-8">
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <span className="text-xs font-semibold">
+                Frequent_Calendar810
+              </span>
+              <span>•</span>
+              <time className="text-muted-foreground text-xs">11h ago</time>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="ml-9 flex flex-col gap-3">
+              <p className="text-sm">
+                Yes. Free to use for personal and commercial projects. No
+                attribution required.
+              </p>
+              <div className="flex items-center gap-1">
+                <Button
+                  asChild
+                  className="size-7"
+                  variant={'ghost'}
+                  size={'icon'}
+                >
+                  <ArrowBigUp
+                    strokeWidth={1.2}
+                    className="hover:stroke-amber-400"
+                  />
+                </Button>
+                <span className="text-sm font-semibold">1.2k</span>
+                <Button
+                  asChild
+                  className="size-7"
+                  variant={'ghost'}
+                  size={'icon'}
+                >
+                  <ArrowBigDown
+                    strokeWidth={1.2}
+                    className="hover:stroke-indigo-400"
+                  />
+                </Button>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </CollapsibleContent>
+      </Collapsible>
+      <Collapsible>
+        <CollapsibleTrigger className="flex items-center gap-1">
+          <Avatar className="size-8">
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <span className="text-xs font-semibold">Frequent_Calendar810</span>
+          <span>•</span>
+          <time className="text-muted-foreground text-xs">11h ago</time>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="ml-9 flex flex-col gap-3">
+          <p className="text-sm">
+            Yes. Free to use for personal and commercial projects. No
+            attribution required.
+          </p>
+          <div className="flex gap-2">
+            <div className="flex items-center gap-1">
+              <Button
+                asChild
+                className="size-7"
+                variant={'ghost'}
+                size={'icon'}
+              >
+                <ArrowBigUp
+                  strokeWidth={1.2}
+                  className="hover:stroke-amber-400"
+                />
+              </Button>
+              <span className="text-sm font-semibold">1.2k</span>
+              <Button
+                asChild
+                className="size-7"
+                variant={'ghost'}
+                size={'icon'}
+              >
+                <ArrowBigDown
+                  strokeWidth={1.2}
+                  className="hover:stroke-indigo-400"
+                />
+              </Button>
+            </div>
+            <Button variant={'ghost'}>
+              <MessageCircle />
+              Reply
+            </Button>
+          </div>
+          <Collapsible>
+            <CollapsibleTrigger className="flex items-center gap-1">
+              <Avatar className="size-8">
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <span className="text-xs font-semibold">
+                Frequent_Calendar810
+              </span>
+              <span>•</span>
+              <time className="text-muted-foreground text-xs">11h ago</time>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="ml-9 flex flex-col gap-3">
+              <p className="text-sm">
+                Yes. Free to use for personal and commercial projects. No
+                attribution required.
+              </p>
+              <div className="flex items-center gap-1">
+                <Button
+                  asChild
+                  className="size-7"
+                  variant={'ghost'}
+                  size={'icon'}
+                >
+                  <ArrowBigUp
+                    strokeWidth={1.2}
+                    className="hover:stroke-amber-400"
+                  />
+                </Button>
+                <span className="text-sm font-semibold">1.2k</span>
+                <Button
+                  asChild
+                  className="size-7"
+                  variant={'ghost'}
+                  size={'icon'}
+                >
+                  <ArrowBigDown
+                    strokeWidth={1.2}
+                    className="hover:stroke-indigo-400"
+                  />
+                </Button>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }

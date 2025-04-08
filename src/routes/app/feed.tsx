@@ -30,7 +30,7 @@ export function FeedRoute() {
                       c/skrillex
                     </Link>
                     <span>•</span>
-                    <span>11h ago</span>
+                    <time>11h ago</time>
                   </div>
                   <div className="text-sm font-semibold tracking-tight sm:text-base">
                     [FRESH ALBUM] Skrillex - FUCK U SKRILLEX YOU THINK UR ANDY
