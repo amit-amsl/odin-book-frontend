@@ -15,6 +15,8 @@ import { PostRoute } from './routes/app/c/post';
 import { ProfileRoute } from './routes/app/profile';
 import { ProtectedRoute } from './components/protected-route';
 import { PublicRoute } from './components/public-route';
+import { PostCreationRoute } from './routes/app/c/post-create';
+import { CommunityCreationRoute } from './routes/app/communities/community-create';
 
 declare module '@tanstack/react-query' {
   interface Register {
@@ -68,8 +70,16 @@ function App() {
             }
           >
             <Route path="feed" element={<FeedRoute />} />
+            <Route
+              path="communities/create"
+              element={<CommunityCreationRoute />}
+            />
             <Route path="c/all" element={<FeedRoute />} />
             <Route path="c/:communityName" element={<CommunityRoute />} />
+            <Route
+              path="c/:communityName/create"
+              element={<PostCreationRoute />}
+            />
             <Route path="c/:communityName/:postId" element={<PostRoute />} />
             <Route path="u/:userId" element={<ProfileRoute />} />
           </Route>

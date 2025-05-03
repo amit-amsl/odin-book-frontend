@@ -1,4 +1,11 @@
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react';
+import {
+  Calendar,
+  ChartNoAxesColumnIncreasing,
+  Home,
+  Inbox,
+  Search,
+  Settings,
+} from 'lucide-react';
 
 import {
   Sidebar,
@@ -10,34 +17,40 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { NavLink } from 'react-router';
 
 // Menu items.
 const items = [
   {
     title: 'Home',
-    url: '#',
+    url: '/feed',
     icon: Home,
   },
   {
-    title: 'Inbox',
-    url: '#',
-    icon: Inbox,
+    title: 'All',
+    url: '/c/all',
+    icon: ChartNoAxesColumnIncreasing,
   },
-  {
-    title: 'Calendar',
-    url: '#',
-    icon: Calendar,
-  },
-  {
-    title: 'Search',
-    url: '#',
-    icon: Search,
-  },
-  {
-    title: 'Settings',
-    url: '#',
-    icon: Settings,
-  },
+  // {
+  //   title: 'Inbox',
+  //   url: '#',
+  //   icon: Inbox,
+  // },
+  // {
+  //   title: 'Calendar',
+  //   url: '#',
+  //   icon: Calendar,
+  // },
+  // {
+  //   title: 'Search',
+  //   url: '#',
+  //   icon: Search,
+  // },
+  // {
+  //   title: 'Settings',
+  //   url: '#',
+  //   icon: Settings,
+  // },
 ];
 
 export function AppSidebar() {
@@ -51,10 +64,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <NavLink to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

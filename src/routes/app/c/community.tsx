@@ -4,7 +4,7 @@ import { useCommunity } from '@/features/community/api/get-community';
 import { useCommunitySubscribe } from '@/features/community/api/subscribe-community';
 import { useUser } from '@/lib/auth';
 import { Plus } from 'lucide-react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { PostFeedView } from '@/features/post/components/post-feed-view';
 
 export function CommunityRoute() {
@@ -57,9 +57,11 @@ export function CommunityRoute() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button>
-                <Plus />
-                Create post
+              <Button asChild>
+                <Link to={`/c/${communityName}/create`}>
+                  <Plus />
+                  Create post
+                </Link>
               </Button>
               <Button
                 variant={`${isLoggedUserSubscribed ? 'destructive' : 'default'}`}
