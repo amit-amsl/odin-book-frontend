@@ -1,11 +1,30 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { useCommunity } from '@/features/community/api/get-community';
+import { useCommunitySubscribe } from '@/features/community/api/subscribe-community';
+import { useUser } from '@/lib/auth';
 import { Plus } from 'lucide-react';
 import { useParams } from 'react-router';
+import { PostFeedView } from '@/features/post/components/post-feed-view';
 
 export function CommunityRoute() {
   const params = useParams();
   const communityName = params.communityName as string;
+  const { user } = useUser();
+
+  const communityQuery = useCommunity(communityName);
+
+  const communitySubscriptionMutation = useCommunitySubscribe();
+
+  if (communityQuery.isLoading) return <div>loading...</div>;
+
+  const community = communityQuery.data;
+
+  const isLoggedUserSubscribed = community?.subscribers.some((sub) => {
+    return sub.user.id === user?.userId;
+  });
+
+  if (!community) return null;
 
   return (
     <div>
@@ -27,11 +46,12 @@ export function CommunityRoute() {
               <h1 className="text-2xl font-semibold md:text-4xl">
                 c/{communityName}
               </h1>
+              <p>{community.description}</p>
               <div className="flex gap-3 text-xs md:text-sm">
-                <p>57k members</p>
-                <p>
+                <p>{community.subscribers.length} members</p>
+                <p className="space-x-1">
                   <span className="inline-flex size-2 rounded-full bg-green-400"></span>
-                  <span> 233 online</span>
+                  <span>N/A online</span>
                 </p>
               </div>
             </div>
@@ -41,11 +61,29 @@ export function CommunityRoute() {
                 <Plus />
                 Create post
               </Button>
-              <Button>Join</Button>
+              <Button
+                variant={`${isLoggedUserSubscribed ? 'destructive' : 'default'}`}
+                onClick={() =>
+                  communitySubscriptionMutation.mutate(communityName)
+                }
+                disabled={communitySubscriptionMutation.isPending}
+              >
+                {isLoggedUserSubscribed ? 'Leave' : 'Join'}
+              </Button>
             </div>
           </div>
         </div>
       </header>
+      <div>
+        {community.posts.map((post) => (
+          <PostFeedView
+            location="community"
+            key={post.id}
+            post={post}
+            communityName={communityName}
+          />
+        ))}
+      </div>
     </div>
   );
 }
