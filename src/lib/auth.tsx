@@ -25,7 +25,8 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      queryClient.setQueryData([USER_KEY], data);
+      const { user } = data;
+      queryClient.setQueryData([USER_KEY], user);
     },
   });
 };

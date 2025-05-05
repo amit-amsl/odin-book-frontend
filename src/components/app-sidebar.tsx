@@ -1,80 +1,75 @@
-import {
-  Calendar,
-  ChartNoAxesColumnIncreasing,
-  Home,
-  Inbox,
-  Search,
-  Settings,
-} from 'lucide-react';
-
+import { ChevronRight, Plus } from 'lucide-react';
+import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from '@/components/ui/sidebar';
-import { NavLink } from 'react-router';
-
-// Menu items.
-const items = [
-  {
-    title: 'Home',
-    url: '/feed',
-    icon: Home,
-  },
-  {
-    title: 'All',
-    url: '/c/all',
-    icon: ChartNoAxesColumnIncreasing,
-  },
-  // {
-  //   title: 'Inbox',
-  //   url: '#',
-  //   icon: Inbox,
-  // },
-  // {
-  //   title: 'Calendar',
-  //   url: '#',
-  //   icon: Calendar,
-  // },
-  // {
-  //   title: 'Search',
-  //   url: '#',
-  //   icon: Search,
-  // },
-  // {
-  //   title: 'Settings',
-  //   url: '#',
-  //   icon: Settings,
-  // },
-];
+import { NavMain } from './nav-main';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from './ui/collapsible';
 
 export function AppSidebar() {
   return (
-    <Sidebar className="top-[var(--header-height)] !h-[calc(100svh-var(var(--header-height)))]">
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink to={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+    <Sidebar className="top-[var(--header-height)] h-[calc(100svh-var(var(--header-height)))]">
+      <SidebarHeader className="border-sidebar-border h-16 border-b">
+        <NavUser />
+      </SidebarHeader>
+      <SidebarContent className="p-2">
+        <NavMain />
+        {/* Communities */}
+        <Collapsible
+          title="Communities"
+          defaultOpen
+          className="group/collapsible"
+        >
+          <SidebarGroup>
+            <SidebarGroupLabel
+              asChild
+              className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm"
+            >
+              <CollapsibleTrigger>
+                Communities{' '}
+                <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton>
+                      <Plus />
+                      <span>New Community</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
       </SidebarContent>
+      <SidebarFooter>
+        {/* <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <Plus />
+              <span>New Community</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu> */}
+      </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }
