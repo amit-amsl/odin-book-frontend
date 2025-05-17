@@ -13,6 +13,7 @@ import { Link } from 'react-router';
 import { useState } from 'react';
 import { ReplyRTEditor } from './reply-tiptap-editor';
 import parse from 'html-react-parser';
+import { useCommentReplies } from '../api/get-comment-replies';
 
 type CommentProps = {
   communityName: string;
@@ -21,14 +22,16 @@ type CommentProps = {
   children?: React.ReactNode;
 };
 
-export function PostComment({
-  communityName,
-  postId,
-  comment,
-  children,
-}: CommentProps) {
+export function PostComment({ communityName, postId, comment }: CommentProps) {
   const [isReplyEditorVisible, setReplyEditorVisibility] = useState(false);
   const commentVotingMutation = useCommentVote();
+
+  const commentRepliesQuery = useCommentReplies(
+    comment.id,
+    comment._count.replies
+  );
+
+  const commentReplies = commentRepliesQuery.data;
 
   const isUserUpvoted = !!comment.upvotes.length;
   const isUserDownvoted = !!comment.downvotes.length;
@@ -46,7 +49,6 @@ export function PostComment({
   ) => {
     e.stopPropagation();
     commentVotingMutation.mutate({
-      communityName,
       postId,
       commentId: comment.id,
       voteValue: voteDir === 'up' ? 1 : -1,
@@ -132,7 +134,15 @@ export function PostComment({
           />
         )}
         {/* Reply section */}
-        {children}
+        {commentReplies &&
+          commentReplies.map((reply) => (
+            <PostComment
+              key={reply.id}
+              comment={reply}
+              postId={postId}
+              communityName={communityName}
+            />
+          ))}
       </CollapsibleContent>
     </Collapsible>
   );

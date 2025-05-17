@@ -1,4 +1,4 @@
-import { ChevronRight, Plus } from 'lucide-react';
+import { Boxes, ChevronRight, Plus } from 'lucide-react';
 import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
@@ -19,8 +19,14 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from './ui/collapsible';
+import { Link } from 'react-router';
+import { useUserCommunities } from '@/features/user/api/get-user-communities';
 
 export function AppSidebar() {
+  const userCommunitiesQuery = useUserCommunities();
+
+  const userCommunities = userCommunitiesQuery.data;
+
   return (
     <Sidebar className="top-[var(--header-height)] h-[calc(100svh-var(var(--header-height)))]">
       <SidebarHeader className="border-sidebar-border h-16 border-b">
@@ -48,11 +54,28 @@ export function AppSidebar() {
               <SidebarGroupContent>
                 <SidebarMenu>
                   <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Plus />
-                      <span>New Community</span>
+                    <SidebarMenuButton asChild>
+                      <Link to={`/communities/create`}>
+                        <Plus />
+                        <span>Create a Community</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
+                  <div className="flex flex-col gap-1.5">
+                    {userCommunities &&
+                      userCommunities.map((community) => (
+                        <SidebarMenuItem>
+                          <SidebarMenuButton asChild>
+                            <Link to={`/c/${community.normalizedName}`}>
+                              <Boxes />
+                              <span className="text-lg font-semibold">
+                                {community.name}
+                              </span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                  </div>
                 </SidebarMenu>
               </SidebarGroupContent>
             </CollapsibleContent>

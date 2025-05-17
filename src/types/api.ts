@@ -42,7 +42,6 @@ export type Post = {
 export type PostExtended = Post & {
   content: string;
   normalizedCommunityName: string;
-  comments: Array<Comment>;
 };
 
 export type Comment = {
@@ -53,11 +52,11 @@ export type Comment = {
   _count: {
     upvotes: number;
     downvotes: number;
+    replies: number;
   };
   upvotes: Array<Omit<User, 'username'>>;
   downvotes: Array<Omit<User, 'username'>>;
   createdAt: Date;
-  replies: Array<Comment>;
 };
 
 export type Subscriber = {

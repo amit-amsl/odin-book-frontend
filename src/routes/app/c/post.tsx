@@ -130,11 +130,7 @@ export function PostRoute() {
         </div>
       </div>
       <CommentRTEditor postId={postId} communityName={communityName} />
-      <CommentSection
-        comments={post.comments}
-        communityName={communityName}
-        postId={postId}
-      />
+      <CommentSection communityName={communityName} postId={postId} />
     </div>
   );
 }

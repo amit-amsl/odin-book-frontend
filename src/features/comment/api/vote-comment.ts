@@ -1,22 +1,35 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { voteInput } from '@/features/post/api/vote-post';
 import { api } from '@/lib/api-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Comment, BaseResponse, PostExtended } from '@/types/api';
+import { Comment, BaseResponse } from '@/types/api';
+
+// async function voteComment({
+//   communityName,
+//   postId,
+//   commentId,
+//   voteValue,
+// }: {
+//   communityName: string;
+//   postId: string;
+//   commentId: string;
+//   voteValue: voteInput;
+// }): Promise<BaseResponse & Comment> {
+//   return api.post(`/post/${communityName}/${postId}/${commentId}/vote`, {
+//     voteValue,
+//   });
+// }
 
 async function voteComment({
-  communityName,
-  postId,
   commentId,
+  postId,
   voteValue,
 }: {
-  communityName: string;
-  postId: string;
   commentId: string;
+  postId: string;
   voteValue: voteInput;
 }): Promise<BaseResponse & Comment> {
-  return api.post(`/post/${communityName}/${postId}/${commentId}/vote`, {
-    voteValue,
-  });
+  return api.post(`/comments/${commentId}/vote`, { voteValue });
 }
 
 export const useCommentVote = () => {
@@ -24,54 +37,78 @@ export const useCommentVote = () => {
   return useMutation({
     mutationFn: voteComment,
     onSuccess: (newData, variables) => {
-      const { postId, commentId } = variables;
-
-      if (queryClient.getQueryData(['post', postId])) {
-        queryClient.setQueryData(['post', postId], (oldData: PostExtended) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { message, ...updatedVotedComment } = newData;
-          if (newData.parentCommentId) {
-            return {
-              ...oldData,
-              comments: [
-                ...oldData.comments.map((comment) => {
-                  return {
-                    ...comment,
-                    replies: [
-                      ...comment.replies.map((reply) => {
-                        if (reply.id === commentId) {
-                          return { ...updatedVotedComment };
-                        }
-                        return reply;
-                      }),
-                    ],
-                  };
-                }),
-              ],
-            };
-          } else {
-            return {
-              ...oldData,
-              comments: [
-                ...oldData.comments.map((comment) => {
-                  if (comment.id === commentId) {
-                    return {
-                      ...comment,
-                      _count: {
-                        upvotes: updatedVotedComment._count.upvotes,
-                        downvotes: updatedVotedComment._count.downvotes,
-                      },
-                      upvotes: [...updatedVotedComment.upvotes],
-                      downvotes: [...updatedVotedComment.downvotes],
-                    };
-                  }
-                  return comment;
-                }),
-              ],
-            };
-          }
-        });
+      const { commentId, postId } = variables;
+      const { message, ...updatedVotedComment } = newData;
+      if (newData.parentCommentId) {
+        queryClient.setQueryData(
+          ['comment', newData.parentCommentId, 'replies'],
+          (oldData: Array<Comment>) =>
+            oldData.map((reply) => {
+              if (reply.id === commentId) {
+                return { ...updatedVotedComment };
+              }
+              return reply;
+            })
+        );
+      } else {
+        queryClient.setQueryData(
+          ['post', postId, 'comments'],
+          (oldData: Array<Comment>) =>
+            oldData.map((comment) => {
+              if (comment.id === commentId) {
+                return { ...updatedVotedComment };
+              }
+              return comment;
+            })
+        );
       }
+
+      // if (queryClient.getQueryData(['post', postId])) {
+      //   queryClient.setQueryData(['post', postId], (oldData: PostExtended) => {
+      //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      //     const { message, ...updatedVotedComment } = newData;
+      //     if (newData.parentCommentId) {
+      //       return {
+      //         ...oldData,
+      //         comments: [
+      //           ...oldData.comments.map((comment) => {
+      //             return {
+      //               ...comment,
+      //               replies: [
+      //                 ...comment.replies.map((reply) => {
+      //                   if (reply.id === commentId) {
+      //                     return { ...updatedVotedComment };
+      //                   }
+      //                   return reply;
+      //                 }),
+      //               ],
+      //             };
+      //           }),
+      //         ],
+      //       };
+      //     } else {
+      //       return {
+      //         ...oldData,
+      //         comments: [
+      //           ...oldData.comments.map((comment) => {
+      //             if (comment.id === commentId) {
+      //               return {
+      //                 ...comment,
+      //                 _count: {
+      //                   upvotes: updatedVotedComment._count.upvotes,
+      //                   downvotes: updatedVotedComment._count.downvotes,
+      //                 },
+      //                 upvotes: [...updatedVotedComment.upvotes],
+      //                 downvotes: [...updatedVotedComment.downvotes],
+      //               };
+      //             }
+      //             return comment;
+      //           }),
+      //         ],
+      //       };
+      //     }
+      //   });
+      // }
     },
   });
 };

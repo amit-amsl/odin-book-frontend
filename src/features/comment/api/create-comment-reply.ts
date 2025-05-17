@@ -25,20 +25,13 @@ export const useCreateCommentReply = () => {
     onSuccess: (newData, variables) => {
       const { postId, commentId } = variables;
 
+      queryClient.setQueryData<Array<Comment>>(
+        ['comment', commentId, 'replies'],
+        (oldData = []) => [newData, ...oldData]
+      );
       queryClient.setQueryData(['post', postId], (oldData: PostExtended) => {
         return {
           ...oldData,
-          comments: [
-            ...oldData.comments.map((comment) => {
-              if (comment.id === commentId) {
-                return {
-                  ...comment,
-                  replies: [...comment.replies, { ...newData }],
-                };
-              }
-              return comment;
-            }),
-          ],
           _count: {
             ...oldData._count,
             comments: oldData._count.comments + 1,

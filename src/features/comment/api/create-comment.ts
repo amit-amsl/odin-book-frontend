@@ -29,10 +29,15 @@ export const useCreateComment = () => {
     onSuccess: (newData, variables) => {
       const { postId } = variables;
 
+      queryClient.setQueryData(
+        ['post', postId, 'comments'],
+        (oldData: Array<Comment>) => {
+          return [newData, ...oldData];
+        }
+      );
       queryClient.setQueryData(['post', postId], (oldData: PostExtended) => {
         return {
           ...oldData,
-          comments: [...oldData.comments, { ...newData }],
           _count: {
             ...oldData._count,
             comments: oldData._count.comments + 1,

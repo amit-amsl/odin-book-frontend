@@ -1,27 +1,35 @@
-import { Comment } from '@/types/api';
 import { PostComment } from './comment';
+import { usePostComments } from '../api/get-comments';
 
 type CommentSectionProps = {
-  comments: Array<Comment>;
   communityName: string;
   postId: string;
 };
 
-export function CommentSection({
-  comments,
-  communityName,
-  postId,
-}: CommentSectionProps) {
+export function CommentSection({ communityName, postId }: CommentSectionProps) {
+  const postCommentsQuery = usePostComments(communityName, postId);
+
+  if (postCommentsQuery.isLoading) return <div>loading...</div>;
+
+  const postComments = postCommentsQuery.data;
+
+  if (!postComments) return null;
+
   return (
     <div className="flex flex-col gap-2">
-      {comments.map((comment) => (
+      {postComments.map((comment) => (
         <PostComment
           key={comment.id}
           comment={comment}
           communityName={communityName}
           postId={postId}
-        >
-          {comment.replies &&
+        />
+      ))}
+    </div>
+  );
+}
+
+/* {comment.replies &&
             comment.replies.length > 0 &&
             comment.replies.map((reply) => (
               <PostComment
@@ -30,9 +38,4 @@ export function CommentSection({
                 communityName={communityName}
                 postId={postId}
               />
-            ))}
-        </PostComment>
-      ))}
-    </div>
-  );
-}
+            ))} */

@@ -14,6 +14,9 @@ export const useCommunitySubscribe = () => {
   return useMutation({
     mutationFn: handleCommunitySubscription,
     onSuccess: (_, communityName) => {
+      queryClient.invalidateQueries({
+        queryKey: ['user', 'sidebar-communities'],
+      });
       return queryClient.invalidateQueries({
         queryKey: ['community', communityName],
       });
