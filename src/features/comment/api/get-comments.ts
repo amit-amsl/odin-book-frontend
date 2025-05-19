@@ -1,16 +1,47 @@
 import { api } from '@/lib/api-client';
 import { Comment } from '@/types/api';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-async function fetchPostComments(
-  communityName: string,
-  postId: string
-): Promise<Array<Comment>> {
-  return api.get(`/post/${communityName}/${postId}/comments`);
+type PostCommentsResponse = {
+  data: Array<Comment>;
+  meta: {
+    page: number;
+    total: number;
+    totalPages: number;
+  };
+};
+
+async function fetchPostComments({
+  communityName,
+  postId,
+  page = 1,
+}: {
+  communityName: string;
+  postId: string;
+  page?: number;
+}): Promise<PostCommentsResponse> {
+  return api.get(`/post/${communityName}/${postId}/comments`, {
+    params: { page },
+  });
 }
 
-export const usePostComments = (communityName: string, postId: string) =>
-  useQuery({
+export const useInfinitePostComments = (
+  communityName: string,
+  postId: string
+) =>
+  useInfiniteQuery({
     queryKey: ['post', postId, 'comments'],
-    queryFn: () => fetchPostComments(communityName, postId),
+    queryFn: ({ pageParam = 1 }) => {
+      return fetchPostComments({
+        communityName,
+        postId,
+        page: pageParam as number,
+      });
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.meta.page === lastPage.meta.totalPages) return undefined;
+      const nextPage = lastPage.meta.page + 1;
+      return nextPage;
+    },
   });

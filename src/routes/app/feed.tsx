@@ -8,7 +8,6 @@ import { Fragment } from 'react/jsx-runtime';
 
 export function FeedRoute() {
   const communitiesFeedQuery = useInfiniteCommunitiesFeed();
-  // const communitiesFeedQuery = useCommunitiesFeed();
 
   if (communitiesFeedQuery.isLoading) return <div>Loading...</div>;
 
@@ -16,11 +15,7 @@ export function FeedRoute() {
     (page) => page.data
   );
 
-  // const communitiesFeed = communitiesFeedQuery.data?.data;
-
   if (!communitiesFeed?.length) return null;
-
-  // if (!communitiesFeed) return null;
 
   return (
     <ScrollArea className="">
