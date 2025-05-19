@@ -1,17 +1,26 @@
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useCommunitiesFeed } from '@/features/community/api/get-communities-feed';
+import { useInfiniteCommunitiesFeed } from '@/features/community/api/get-communities-feed';
 import { PostFeedView } from '@/features/post/components/post-feed-view';
+import { Loader2 } from 'lucide-react';
 import { Fragment } from 'react/jsx-runtime';
 
 export function FeedRoute() {
-  const communitiesFeedQuery = useCommunitiesFeed();
+  const communitiesFeedQuery = useInfiniteCommunitiesFeed();
+  // const communitiesFeedQuery = useCommunitiesFeed();
 
   if (communitiesFeedQuery.isLoading) return <div>Loading...</div>;
 
-  const communitiesFeed = communitiesFeedQuery.data;
+  const communitiesFeed = communitiesFeedQuery.data?.pages.flatMap(
+    (page) => page.data
+  );
 
-  if (!communitiesFeed) return null;
+  // const communitiesFeed = communitiesFeedQuery.data?.data;
+
+  if (!communitiesFeed?.length) return null;
+
+  // if (!communitiesFeed) return null;
 
   return (
     <ScrollArea className="">
@@ -29,6 +38,20 @@ export function FeedRoute() {
           </Fragment>
         ))}
       </div>
+      {communitiesFeedQuery.hasNextPage && (
+        <div className="mb-3 flex items-center justify-center">
+          <Button onClick={() => communitiesFeedQuery.fetchNextPage()}>
+            {communitiesFeedQuery.isFetchingNextPage ? (
+              <>
+                <Loader2 className="animate-spin" />
+                Please wait
+              </>
+            ) : (
+              'Load more posts...'
+            )}
+          </Button>
+        </div>
+      )}
     </ScrollArea>
   );
 }
