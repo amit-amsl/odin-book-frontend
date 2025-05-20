@@ -5,15 +5,23 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
-import { ArrowBigUp, ArrowBigDown, MessageCircle } from 'lucide-react';
+import {
+  ArrowBigUp,
+  ArrowBigDown,
+  MessageCircle,
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  CornerDownRight,
+} from 'lucide-react';
 import { calculateTotalVotes, cn, formatDate } from '@/lib/utils';
 import { Comment } from '@/types/api';
 import { useCommentVote } from '../api/vote-comment';
 import { Link } from 'react-router';
 import { useState } from 'react';
 import { ReplyRTEditor } from './reply-tiptap-editor';
+import { useInfiniteCommentReplies } from '../api/get-comment-replies';
 import parse from 'html-react-parser';
-import { useCommentReplies } from '../api/get-comment-replies';
 
 type CommentProps = {
   communityName: string;
@@ -24,14 +32,20 @@ type CommentProps = {
 
 export function PostComment({ communityName, postId, comment }: CommentProps) {
   const [isReplyEditorVisible, setReplyEditorVisibility] = useState(false);
+  const [isRepliesVisible, setRepliesVisibility] = useState(false);
+
   const commentVotingMutation = useCommentVote();
 
-  const commentRepliesQuery = useCommentReplies(
+  const shouldFetchReplies = comment._count.replies > 0 && isRepliesVisible;
+
+  const commentRepliesQuery = useInfiniteCommentReplies(
     comment.id,
-    comment._count.replies
+    shouldFetchReplies
   );
 
-  const commentReplies = commentRepliesQuery.data;
+  const commentReplies = commentRepliesQuery.data?.pages.flatMap(
+    (page) => page.data
+  );
 
   const isUserUpvoted = !!comment.upvotes.length;
   const isUserDownvoted = !!comment.downvotes.length;
@@ -41,6 +55,10 @@ export function PostComment({ communityName, postId, comment }: CommentProps) {
     if (!isReplyComment) {
       setReplyEditorVisibility(value);
     }
+  };
+
+  const toggleRepliesVisibility = () => {
+    setRepliesVisibility((prev) => !prev);
   };
 
   const handleCommentVote = (
@@ -124,6 +142,14 @@ export function PostComment({ communityName, postId, comment }: CommentProps) {
               Reply
             </Button>
           )}
+          {comment._count.replies > 0 && (
+            <Button variant={'ghost'} onClick={toggleRepliesVisibility}>
+              {isRepliesVisible ? <ChevronUp /> : <ChevronDown />}
+              {isRepliesVisible
+                ? 'Hide replies'
+                : `${comment._count.replies} repl${comment._count.replies > 1 ? 'ies' : 'y'}`}
+            </Button>
+          )}
         </div>
         {!isReplyComment && isReplyEditorVisible && (
           <ReplyRTEditor
@@ -134,15 +160,36 @@ export function PostComment({ communityName, postId, comment }: CommentProps) {
           />
         )}
         {/* Reply section */}
-        {commentReplies &&
-          commentReplies.map((reply) => (
-            <PostComment
-              key={reply.id}
-              comment={reply}
-              postId={postId}
-              communityName={communityName}
-            />
-          ))}
+        {isRepliesVisible && commentReplies && (
+          <div>
+            {commentReplies.map((reply) => (
+              <PostComment
+                key={reply.id}
+                comment={reply}
+                postId={postId}
+                communityName={communityName}
+              />
+            ))}
+            {commentRepliesQuery.hasNextPage && (
+              <Button
+                variant={'ghost'}
+                onClick={() => commentRepliesQuery.fetchNextPage()}
+              >
+                {commentRepliesQuery.isFetchingNextPage ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    Please wait
+                  </>
+                ) : (
+                  <>
+                    <CornerDownRight />
+                    Show more replies
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+        )}
       </CollapsibleContent>
     </Collapsible>
   );
