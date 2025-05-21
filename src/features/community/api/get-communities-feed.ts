@@ -2,7 +2,7 @@ import { api } from '@/lib/api-client';
 import { Post } from '@/types/api';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-type CommunitiesFeedResponse = {
+export type CommunitiesFeedResponse = {
   data: Array<
     Post & {
       community: { normalizedName: string };

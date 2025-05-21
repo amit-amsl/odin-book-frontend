@@ -2,37 +2,21 @@ import { api } from '@/lib/api-client';
 import { Comment } from '@/types/api';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-// async function fetchCommentReplies(commentId: string): Promise<Array<Comment>> {
-//   return api.get(`/comments/${commentId}/replies`);
-// }
-
-// export const useCommentReplies = (
-//   commentId: string,
-//   shouldFetchReplies: boolean
-// ) =>
-//   useQuery({
-//     queryKey: ['comment', commentId, 'replies'],
-//     queryFn: () => fetchCommentReplies(commentId),
-//     enabled: shouldFetchReplies,
-//   });
-
-type CommentRepliesResponse = {
+export type CommentRepliesResponse = {
   data: Array<Comment>;
   meta: {
-    page: number;
-    total: number;
-    totalPages: number;
+    nextCursor: string | null;
   };
 };
 
 async function fetchCommentReplies({
   commentId,
-  page = 1,
+  cursor,
 }: {
   commentId: string;
-  page?: number;
+  cursor?: string;
 }): Promise<CommentRepliesResponse> {
-  return api.get(`/comments/${commentId}/replies`, { params: { page } });
+  return api.get(`/comments/${commentId}/replies`, { params: { cursor } });
 }
 
 export const useInfiniteCommentReplies = (
@@ -41,14 +25,12 @@ export const useInfiniteCommentReplies = (
 ) =>
   useInfiniteQuery({
     queryKey: ['comment', commentId, 'replies'],
-    queryFn: ({ pageParam = 1 }) => {
-      return fetchCommentReplies({ commentId, page: pageParam as number });
+    queryFn: ({ pageParam }: { pageParam: string | undefined }) => {
+      return fetchCommentReplies({ commentId, cursor: pageParam });
     },
     enabled: shouldFetchReplies,
-    initialPageParam: 1,
+    initialPageParam: undefined,
     getNextPageParam: (lastPage) => {
-      if (lastPage.meta.page === lastPage.meta.totalPages) return undefined;
-      const nextPage = lastPage.meta.page + 1;
-      return nextPage;
+      return lastPage.meta.nextCursor;
     },
   });

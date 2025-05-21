@@ -2,6 +2,7 @@ import { api } from '@/lib/api-client';
 import { Comment, PostExtended } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
+import { PostCommentsResponse } from './get-comments';
 
 export const createCommentInputSchema = z.object({
   content: z.string().trim().min(1),
@@ -29,12 +30,26 @@ export const useCreateComment = () => {
     onSuccess: (newData, variables) => {
       const { postId } = variables;
 
-      queryClient.setQueryData(
-        ['post', postId, 'comments'],
-        (oldData: Array<Comment>) => {
-          return [newData, ...oldData];
-        }
-      );
+      queryClient.setQueryData<{
+        pages: Array<PostCommentsResponse>;
+        pageParams: string[];
+      }>(['post', postId, 'comments'], (oldData) => {
+        if (!oldData) return oldData;
+
+        return {
+          ...oldData,
+          pages: [
+            {
+              ...oldData.pages[0],
+              data: [newData, ...oldData.pages[0].data],
+              meta: {
+                ...oldData.pages[0].meta,
+              },
+            },
+            ...oldData.pages.slice(1),
+          ],
+        };
+      });
       queryClient.setQueryData(['post', postId], (oldData: PostExtended) => {
         return {
           ...oldData,

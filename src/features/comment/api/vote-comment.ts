@@ -3,6 +3,8 @@ import { voteInput } from '@/features/post/api/vote-post';
 import { api } from '@/lib/api-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Comment, BaseResponse } from '@/types/api';
+import { PostCommentsResponse } from './get-comments';
+import { CommentRepliesResponse } from './get-comment-replies';
 
 // async function voteComment({
 //   communityName,
@@ -40,75 +42,40 @@ export const useCommentVote = () => {
       const { commentId, postId } = variables;
       const { message, ...updatedVotedComment } = newData;
       if (newData.parentCommentId) {
-        queryClient.setQueryData(
-          ['comment', newData.parentCommentId, 'replies'],
-          (oldData: Array<Comment>) =>
-            oldData.map((reply) => {
-              if (reply.id === commentId) {
-                return { ...updatedVotedComment };
-              }
-              return reply;
-            })
-        );
-      } else {
-        queryClient.setQueryData(
-          ['post', postId, 'comments'],
-          (oldData: Array<Comment>) =>
-            oldData.map((comment) => {
-              if (comment.id === commentId) {
-                return { ...updatedVotedComment };
-              }
-              return comment;
-            })
-        );
-      }
+        queryClient.setQueryData<{
+          pages: Array<CommentRepliesResponse>;
+          pageParams: string[];
+        }>(['comment', newData.parentCommentId, 'replies'], (oldData) => {
+          if (!oldData) return oldData;
 
-      // if (queryClient.getQueryData(['post', postId])) {
-      //   queryClient.setQueryData(['post', postId], (oldData: PostExtended) => {
-      //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      //     const { message, ...updatedVotedComment } = newData;
-      //     if (newData.parentCommentId) {
-      //       return {
-      //         ...oldData,
-      //         comments: [
-      //           ...oldData.comments.map((comment) => {
-      //             return {
-      //               ...comment,
-      //               replies: [
-      //                 ...comment.replies.map((reply) => {
-      //                   if (reply.id === commentId) {
-      //                     return { ...updatedVotedComment };
-      //                   }
-      //                   return reply;
-      //                 }),
-      //               ],
-      //             };
-      //           }),
-      //         ],
-      //       };
-      //     } else {
-      //       return {
-      //         ...oldData,
-      //         comments: [
-      //           ...oldData.comments.map((comment) => {
-      //             if (comment.id === commentId) {
-      //               return {
-      //                 ...comment,
-      //                 _count: {
-      //                   upvotes: updatedVotedComment._count.upvotes,
-      //                   downvotes: updatedVotedComment._count.downvotes,
-      //                 },
-      //                 upvotes: [...updatedVotedComment.upvotes],
-      //                 downvotes: [...updatedVotedComment.downvotes],
-      //               };
-      //             }
-      //             return comment;
-      //           }),
-      //         ],
-      //       };
-      //     }
-      //   });
-      // }
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              data: page.data.map((reply) =>
+                reply.id === commentId ? { ...updatedVotedComment } : reply
+              ),
+            })),
+          };
+        });
+      } else {
+        queryClient.setQueryData<{
+          pages: Array<PostCommentsResponse>;
+          pageParams: string[];
+        }>(['post', postId, 'comments'], (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              data: page.data.map((comment) =>
+                comment.id === commentId ? { ...updatedVotedComment } : comment
+              ),
+            })),
+          };
+        });
+      }
     },
   });
 };

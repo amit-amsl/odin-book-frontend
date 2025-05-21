@@ -2,26 +2,24 @@ import { api } from '@/lib/api-client';
 import { Comment } from '@/types/api';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-type PostCommentsResponse = {
+export type PostCommentsResponse = {
   data: Array<Comment>;
   meta: {
-    page: number;
-    total: number;
-    totalPages: number;
+    nextCursor: string | null;
   };
 };
 
 async function fetchPostComments({
   communityName,
   postId,
-  page = 1,
+  cursor,
 }: {
   communityName: string;
   postId: string;
-  page?: number;
+  cursor?: string;
 }): Promise<PostCommentsResponse> {
   return api.get(`/post/${communityName}/${postId}/comments`, {
-    params: { page },
+    params: { cursor },
   });
 }
 
@@ -31,17 +29,15 @@ export const useInfinitePostComments = (
 ) =>
   useInfiniteQuery({
     queryKey: ['post', postId, 'comments'],
-    queryFn: ({ pageParam = 1 }) => {
+    queryFn: ({ pageParam }: { pageParam: string | undefined }) => {
       return fetchPostComments({
         communityName,
         postId,
-        page: pageParam as number,
+        cursor: pageParam,
       });
     },
-    initialPageParam: 1,
+    initialPageParam: undefined,
     getNextPageParam: (lastPage) => {
-      if (lastPage.meta.page === lastPage.meta.totalPages) return undefined;
-      const nextPage = lastPage.meta.page + 1;
-      return nextPage;
+      return lastPage.meta.nextCursor;
     },
   });

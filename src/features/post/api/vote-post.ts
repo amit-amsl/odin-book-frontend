@@ -1,3 +1,4 @@
+import { CommunitiesFeedResponse } from '@/features/community/api/get-communities-feed';
 import { api } from '@/lib/api-client';
 import { BaseResponse, Community, Post } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -61,28 +62,35 @@ export const usePostVote = () => {
         });
       }
       if (queryClient.getQueryData(['community', 'feed'])) {
-        queryClient.setQueryData(
-          ['community', 'feed'],
-          (oldData: Array<Post>) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { message, ...updatedVotedPost } = newData;
-            return oldData.map((post) => {
-              if (post.id === postId) {
-                return {
-                  ...post,
-                  _count: {
-                    ...post._count,
-                    upvotes: updatedVotedPost._count.upvotes,
-                    downvotes: updatedVotedPost._count.downvotes,
-                  },
-                  upvotes: [...updatedVotedPost.upvotes],
-                  downvotes: [...updatedVotedPost.downvotes],
-                };
-              }
-              return post;
-            });
-          }
-        );
+        queryClient.setQueryData<{
+          pages: Array<CommunitiesFeedResponse>;
+          pageParams: number[];
+        }>(['community', 'feed'], (oldData) => {
+          if (!oldData) return oldData;
+
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { message, ...updatedVotedPost } = newData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              data: page.data.map((post) =>
+                post.id === updatedVotedPost.id
+                  ? {
+                      ...post,
+                      _count: {
+                        ...post._count,
+                        upvotes: updatedVotedPost._count.upvotes,
+                        downvotes: updatedVotedPost._count.downvotes,
+                      },
+                      upvotes: [...updatedVotedPost.upvotes],
+                      downvotes: [...updatedVotedPost.downvotes],
+                    }
+                  : post
+              ),
+            })),
+          };
+        });
       }
     },
   });
