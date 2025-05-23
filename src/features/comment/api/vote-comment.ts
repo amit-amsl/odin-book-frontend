@@ -6,22 +6,6 @@ import { Comment, BaseResponse } from '@/types/api';
 import { PostCommentsResponse } from './get-comments';
 import { CommentRepliesResponse } from './get-comment-replies';
 
-// async function voteComment({
-//   communityName,
-//   postId,
-//   commentId,
-//   voteValue,
-// }: {
-//   communityName: string;
-//   postId: string;
-//   commentId: string;
-//   voteValue: voteInput;
-// }): Promise<BaseResponse & Comment> {
-//   return api.post(`/post/${communityName}/${postId}/${commentId}/vote`, {
-//     voteValue,
-//   });
-// }
-
 async function voteComment({
   commentId,
   postId,
