@@ -1,7 +1,9 @@
 import { api } from '@/lib/api-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCommentInput } from './create-comment';
-import { PostExtended, Comment } from '@/types/api';
+import { Comment } from '@/types/api';
+import { CommentRepliesResponse } from './get-comment-replies';
+import { PostCommentsResponse } from './get-comments';
 
 async function createCommentReply({
   communityName,
@@ -25,19 +27,51 @@ export const useCreateCommentReply = () => {
     onSuccess: (newData, variables) => {
       const { postId, commentId } = variables;
 
-      // queryClient.setQueryData<Array<Comment>>(
-      //   ['comment', commentId, 'replies'],
-      //   (oldData = []) => [newData, ...oldData]
-      // );
-      // queryClient.setQueryData(['post', postId], (oldData: PostExtended) => {
-      //   return {
-      //     ...oldData,
-      //     _count: {
-      //       ...oldData._count,
-      //       comments: oldData._count.comments + 1,
-      //     },
-      //   };
-      // });
+      queryClient.setQueryData<{
+        pages: Array<CommentRepliesResponse>;
+        pageParams: string[];
+      }>(['comment', newData.parentCommentId, 'replies'], (oldData) => {
+        if (!oldData) return oldData;
+
+        return {
+          ...oldData,
+          pages: [
+            {
+              ...oldData.pages[0],
+              data: [newData, ...oldData.pages[0].data],
+              meta: {
+                ...oldData.pages[0].meta,
+              },
+            },
+            ...oldData.pages.slice(1),
+          ],
+        };
+      });
+
+      queryClient.setQueryData<{
+        pages: Array<PostCommentsResponse>;
+        pageParams: string[];
+      }>(['post', postId, 'comments'], (oldData) => {
+        if (!oldData) return oldData;
+
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            data: page.data.map((comment) =>
+              comment.id === commentId
+                ? {
+                    ...comment,
+                    _count: {
+                      ...comment._count,
+                      replies: comment._count.replies + 1,
+                    },
+                  }
+                : comment
+            ),
+          })),
+        };
+      });
     },
   });
 };
