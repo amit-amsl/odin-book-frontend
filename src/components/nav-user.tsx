@@ -73,7 +73,7 @@ export function NavUser() {
                     <span className="truncate text-xs">john@doe.com</span>
                   </div>
                 </div>
-                <ModeToggle />
+                <ModeToggle toggleLocation="afterAuth" />
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

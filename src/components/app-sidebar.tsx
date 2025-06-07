@@ -82,16 +82,7 @@ export function AppSidebar() {
           </SidebarGroup>
         </Collapsible>
       </SidebarContent>
-      <SidebarFooter>
-        {/* <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton>
-              <Plus />
-              <span>New Community</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu> */}
-      </SidebarFooter>
+      <SidebarFooter></SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

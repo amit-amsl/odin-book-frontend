@@ -16,6 +16,7 @@ import { Link } from 'react-router';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { useState } from 'react';
 import axios, { AxiosError } from 'axios';
+import { ModeToggle } from '@/components/mode-toggle';
 
 export default function LoginRoute() {
   const [serverError, setServerError] = useState('');
@@ -45,6 +46,7 @@ export default function LoginRoute() {
 
   return (
     <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <ModeToggle toggleLocation="beforeAuth" />
       <div className="w-full max-w-sm">
         <Form {...loginForm}>
           <form onSubmit={loginForm.handleSubmit(onSubmit)}>

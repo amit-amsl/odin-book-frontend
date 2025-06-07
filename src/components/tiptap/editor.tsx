@@ -52,36 +52,3 @@ export function TipTapRTEditor({
     </>
   );
 }
-
-//   return (
-//     <div
-//       className={`transition-all duration-300 ease-in-out ${
-//         collapsed ? 'h-auto overflow-hidden' : 'h-auto'
-//       }`}
-//     >
-//       <div className="border-border bg-background rounded-md border p-2 shadow-sm">
-//         {collapsed ? (
-//           <>
-//             <input
-//               type="text"
-//               defaultValue={'Join the conversation...'}
-//               className="text-muted-foreground w-full bg-transparent text-sm outline-none"
-//               onFocus={handleFocus}
-//               readOnly
-//             />
-//           </>
-//         ) : (
-//           <>
-//             <RTEditorMenuBar editor={editor} />
-//             <EditorContent editor={editor} />
-//             <div className="flex justify-end gap-2 pt-2">
-//               <Button variant="outline" onClick={handleCancel}>
-//                 Cancel
-//               </Button>
-//               <Button>Submit</Button>
-//             </div>
-//           </>
-//         )}
-//       </div>
-//     </div>
-//   );
