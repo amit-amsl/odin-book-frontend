@@ -1,5 +1,5 @@
 import { api } from '@/lib/api-client';
-import { Post } from '@/types/api';
+import { BaseResponse } from '@/types/api';
 import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 
@@ -18,7 +18,7 @@ async function createComment({
 }: {
   communityName: string;
   data: createPostInput;
-}): Promise<Post> {
+}): Promise<BaseResponse & { postId: string }> {
   return api.post(`/post/${communityName}`, data);
 }
 

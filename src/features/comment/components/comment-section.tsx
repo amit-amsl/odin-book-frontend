@@ -1,7 +1,8 @@
 import { PostComment } from './comment';
 import { useInfinitePostComments } from '../api/get-comments';
-import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
+import { MessagesSquare } from 'lucide-react';
 
 type CommentSectionProps = {
   communityName: string;
@@ -11,16 +12,36 @@ type CommentSectionProps = {
 export function CommentSection({ communityName, postId }: CommentSectionProps) {
   const postCommentsQuery = useInfinitePostComments(communityName, postId);
 
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && postCommentsQuery.hasNextPage)
+      postCommentsQuery.fetchNextPage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView, postCommentsQuery.hasNextPage, postCommentsQuery.fetchNextPage]);
+
   if (postCommentsQuery.isLoading) return <div>loading...</div>;
 
   const postComments = postCommentsQuery.data?.pages.flatMap(
     (page) => page.data
   );
 
-  if (!postComments?.length) return null;
+  if (!postComments?.length)
+    return (
+      <div className="mt-3 flex flex-col items-center text-center">
+        <MessagesSquare size={48} />
+        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+          Be the first to comment
+        </h4>
+        <p className="leading-7">
+          Nobody's responded to this post yet. Add your thoughts and get the
+          conversation going.
+        </p>
+      </div>
+    );
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2">
       {postComments.map((comment) => (
         <PostComment
           key={comment.id}
@@ -29,20 +50,11 @@ export function CommentSection({ communityName, postId }: CommentSectionProps) {
           postId={postId}
         />
       ))}
-      {postCommentsQuery.hasNextPage && (
-        <div className="mb-3 flex items-center justify-center">
-          <Button onClick={() => postCommentsQuery.fetchNextPage()}>
-            {postCommentsQuery.isFetchingNextPage ? (
-              <>
-                <Loader2 className="animate-spin" />
-                Please wait
-              </>
-            ) : (
-              'Load more comments...'
-            )}
-          </Button>
-        </div>
-      )}
+      <div ref={ref} className="mb-3 flex items-center justify-center">
+        {postCommentsQuery.isFetchingNextPage && (
+          <p>Loading more comments...</p>
+        )}
+      </div>
     </div>
   );
 }

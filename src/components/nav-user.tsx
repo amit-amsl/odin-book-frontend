@@ -23,11 +23,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { useLogout } from '@/lib/auth';
+import { useLogout, useUser } from '@/lib/auth';
 import { ModeToggle } from './mode-toggle';
+import { Link } from 'react-router';
 
 export function NavUser() {
   const { isMobile } = useSidebar();
+  const { user } = useUser();
   const logout = useLogout();
 
   return (
@@ -83,9 +85,11 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Profile
+              <DropdownMenuItem asChild>
+                <Link to={`/user/${user?.username}`}>
+                  <BadgeCheck />
+                  Profile
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />

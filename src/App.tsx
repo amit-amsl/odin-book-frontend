@@ -9,15 +9,17 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { AppRoot } from './routes/app/app-root';
 import { LoginRoute } from './routes/auth/login';
 import { RegisterRoute } from './routes/auth/register';
-import { FeedRoute } from './routes/app/feed';
+import { SubscribedFeedRoute } from './routes/app/subscribed-feed';
 import { CommunityRoute } from './routes/app/c/community';
 import { PostRoute } from './routes/app/c/post';
-import { ProfileRoute } from './routes/app/profile';
+import { UserProfileRoute } from './routes/app/user/user-profile';
 import { ProtectedRoute } from './components/protected-route';
 import { PublicRoute } from './components/public-route';
 import { PostCreationRoute } from './routes/app/c/post-create';
 import { CommunityCreationRoute } from './routes/app/communities/community-create';
 import { ThemeProvider } from './components/theme-provider';
+import { AllFeedRoute } from './routes/app/all-feed';
+import { Toaster } from '@/components/ui/sonner';
 
 declare module '@tanstack/react-query' {
   interface Register {
@@ -35,6 +37,7 @@ const queryClient = new QueryClient({
   }),
   defaultOptions: {
     queries: {
+      staleTime: 60 * 1000 * 3,
       refetchOnWindowFocus: false,
       retry: false,
     },
@@ -71,23 +74,24 @@ function App() {
                 </ProtectedRoute>
               }
             >
-              <Route path="feed" element={<FeedRoute />} />
+              <Route path="feed" element={<SubscribedFeedRoute />} />
               <Route
                 path="communities/create"
                 element={<CommunityCreationRoute />}
               />
-              <Route path="c/all" element={<FeedRoute />} />
+              <Route path="c/all" element={<AllFeedRoute />} />
               <Route path="c/:communityName" element={<CommunityRoute />} />
               <Route
                 path="c/:communityName/create"
                 element={<PostCreationRoute />}
               />
               <Route path="c/:communityName/:postId" element={<PostRoute />} />
-              <Route path="u/:userId" element={<ProfileRoute />} />
+              <Route path="user/:username" element={<UserProfileRoute />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/feed" />} />
           </Routes>
+          <Toaster />
         </BrowserRouter>
       </ThemeProvider>
       {DEV_MODE && <ReactQueryDevtools initialIsOpen={false} />}

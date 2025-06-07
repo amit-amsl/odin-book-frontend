@@ -1,6 +1,5 @@
-import { CommunitiesFeedResponse } from '@/features/community/api/get-communities-feed';
 import { api } from '@/lib/api-client';
-import { BaseResponse, Community, Post } from '@/types/api';
+import { BaseResponse, InfiniteData, Post } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
@@ -26,69 +25,61 @@ export const usePostVote = () => {
     mutationFn: votePost,
     onSuccess: (newData, variables) => {
       const { communityName, postId } = variables;
-      if (queryClient.getQueryData(['community', communityName])) {
-        queryClient.setQueryData(
-          ['community', communityName],
-          (oldData: Community) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { message, ...updatedVotedPost } = newData;
-            return {
-              ...oldData,
-              posts: [
-                ...oldData.posts.map((post) => {
-                  if (post.id === postId) {
-                    return { ...updatedVotedPost };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { message, ...updatedVotedPost } = newData;
+
+      const updatedPostsQueriesData = (oldData: InfiniteData<Post>) => {
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            data: page.data.map((post) =>
+              post.id === updatedVotedPost.id
+                ? {
+                    ...post,
+                    _count: {
+                      ...post._count,
+                      upvotes: updatedVotedPost._count.upvotes,
+                      downvotes: updatedVotedPost._count.downvotes,
+                    },
+                    isPostUpvoted: updatedVotedPost.isPostUpvoted,
+                    isPostDownvoted: updatedVotedPost.isPostDownvoted,
                   }
-                  return post;
-                }),
-              ],
-            };
+                : post
+            ),
+          })),
+        };
+      };
+
+      queryClient.setQueriesData<InfiniteData<Post>>(
+        { queryKey: ['community', 'feed'] },
+        (oldData) => {
+          if (!oldData) return oldData;
+          return updatedPostsQueriesData(oldData);
+        }
+      );
+
+      if (queryClient.getQueryData(['community', communityName, 'posts'])) {
+        queryClient.setQueryData<InfiniteData<Post>>(
+          ['community', communityName, 'posts'],
+          (oldData) => {
+            if (!oldData) return oldData;
+            return updatedPostsQueriesData(oldData);
           }
         );
       }
+
       if (queryClient.getQueryData(['post', postId])) {
         queryClient.setQueryData(['post', postId], (oldData: Post) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { message, ...updatedVotedPost } = newData;
           return {
             ...oldData,
             _count: {
+              ...oldData._count,
               upvotes: updatedVotedPost._count.upvotes,
               downvotes: updatedVotedPost._count.downvotes,
             },
-            upvotes: [...updatedVotedPost.upvotes],
-            downvotes: [...updatedVotedPost.downvotes],
-          };
-        });
-      }
-      if (queryClient.getQueryData(['community', 'feed'])) {
-        queryClient.setQueryData<{
-          pages: Array<CommunitiesFeedResponse>;
-          pageParams: number[];
-        }>(['community', 'feed'], (oldData) => {
-          if (!oldData) return oldData;
-
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { message, ...updatedVotedPost } = newData;
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              data: page.data.map((post) =>
-                post.id === updatedVotedPost.id
-                  ? {
-                      ...post,
-                      _count: {
-                        ...post._count,
-                        upvotes: updatedVotedPost._count.upvotes,
-                        downvotes: updatedVotedPost._count.downvotes,
-                      },
-                      upvotes: [...updatedVotedPost.upvotes],
-                      downvotes: [...updatedVotedPost.downvotes],
-                    }
-                  : post
-              ),
-            })),
+            isPostUpvoted: updatedVotedPost.isPostUpvoted,
+            isPostDownvoted: updatedVotedPost.isPostDownvoted,
           };
         });
       }

@@ -2,29 +2,52 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useCommunity } from '@/features/community/api/get-community';
 import { useCommunitySubscribe } from '@/features/community/api/subscribe-community';
-import { useUser } from '@/lib/auth';
 import { Plus } from 'lucide-react';
 import { Link, useParams } from 'react-router';
 import { PostFeedView } from '@/features/post/components/post-feed-view';
+import { SpinnerLoadingCircle } from '@/components/spinner-loading-circle';
+import { useInfiniteCommunityPosts } from '@/features/community/api/get-community-posts';
+import { useInView } from 'react-intersection-observer';
+import { Fragment, useEffect } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 export function CommunityRoute() {
   const params = useParams();
   const communityName = params.communityName as string;
-  const { user } = useUser();
 
   const communityQuery = useCommunity(communityName);
 
+  const communityPostsQuery = useInfiniteCommunityPosts(communityName);
+
   const communitySubscriptionMutation = useCommunitySubscribe();
 
-  if (communityQuery.isLoading) return <div>loading...</div>;
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && communityPostsQuery.hasNextPage)
+      communityPostsQuery.fetchNextPage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    inView,
+    communityPostsQuery.hasNextPage,
+    communityPostsQuery.fetchNextPage,
+  ]);
+
+  if (communityQuery.isLoading || communityPostsQuery.isLoading)
+    return (
+      <div className="mt-5 flex justify-center">
+        <SpinnerLoadingCircle />
+      </div>
+    );
 
   const community = communityQuery.data;
 
-  const isLoggedUserSubscribed = community?.subscribers.some((sub) => {
-    return sub.user.id === user?.userId;
-  });
+  const communityPosts = communityPostsQuery.data?.pages.flatMap(
+    (page) => page.data
+  );
 
-  if (!community) return null;
+  if (!community || !communityPosts?.length) return null;
 
   return (
     <div>
@@ -48,43 +71,54 @@ export function CommunityRoute() {
               </h1>
               <p>{community.description}</p>
               <div className="flex gap-3 text-xs md:text-sm">
-                <p>{community.subscribers.length} members</p>
+                <p>{community.subscribersAmount} members</p>
                 <p className="space-x-1">
                   <span className="inline-flex size-2 rounded-full bg-green-400"></span>
                   <span>N/A online</span>
                 </p>
               </div>
+              {community.isUserModerator && (
+                <Badge variant="destructive">Moderator</Badge>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
-              <Button asChild>
-                <Link to={`/c/${communityName}/create`}>
-                  <Plus />
-                  Create post
-                </Link>
-              </Button>
+              {community.isUserSubscribed && (
+                <Button asChild>
+                  <Link to={`/c/${communityName}/create`}>
+                    <Plus />
+                    Create post
+                  </Link>
+                </Button>
+              )}
               <Button
-                variant={`${isLoggedUserSubscribed ? 'destructive' : 'default'}`}
+                variant={`${community.isUserSubscribed ? 'destructive' : 'default'}`}
                 onClick={() =>
                   communitySubscriptionMutation.mutate(communityName)
                 }
-                disabled={communitySubscriptionMutation.isPending}
+                disabled={
+                  communitySubscriptionMutation.isPending ||
+                  community.isUserModerator
+                }
               >
-                {isLoggedUserSubscribed ? 'Leave' : 'Join'}
+                {community.isUserSubscribed ? 'Leave' : 'Join'}
               </Button>
             </div>
           </div>
         </div>
       </header>
-      <div>
-        {community.posts.map((post) => (
-          <PostFeedView
-            location="community"
-            key={post.id}
-            post={post}
-            communityName={communityName}
-          />
+      <div className="flex flex-col gap-2 p-2">
+        {communityPosts.map((post) => (
+          <Fragment key={post.id}>
+            <PostFeedView location="community" key={post.id} post={post} />
+            <Separator />
+          </Fragment>
         ))}
+        <div ref={ref} className="mb-3 flex items-center justify-center">
+          {communityPostsQuery.isFetchingNextPage && (
+            <p>Loading more posts...</p>
+          )}
+        </div>
       </div>
     </div>
   );

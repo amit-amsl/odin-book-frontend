@@ -64,7 +64,7 @@ export function AppSidebar() {
                   <div className="flex flex-col gap-1.5">
                     {userCommunities &&
                       userCommunities.map((community) => (
-                        <SidebarMenuItem>
+                        <SidebarMenuItem key={community.normalizedName}>
                           <SidebarMenuButton asChild>
                             <Link to={`/c/${community.normalizedName}`}>
                               <Boxes />

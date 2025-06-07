@@ -19,8 +19,9 @@ export type Community = {
   name: string;
   description: string;
   createdAt: Date;
-  posts: Array<Post>;
-  subscribers: Array<Subscriber>;
+  subscribersAmount: number;
+  isUserSubscribed: boolean;
+  isUserModerator: boolean;
 };
 
 export type Post = {
@@ -29,8 +30,10 @@ export type Post = {
   author: User;
   isNSFW: boolean;
   isSpoiler: boolean;
-  upvotes: Array<Omit<User, 'username'>>;
-  downvotes: Array<Omit<User, 'username'>>;
+  isPostBookmarked: boolean;
+  isPostUpvoted: boolean;
+  isPostDownvoted: boolean;
+  communityNormalizedName: string;
   createdAt: Date;
   _count: {
     upvotes: number;
@@ -41,7 +44,19 @@ export type Post = {
 
 export type PostExtended = Post & {
   content: string;
-  normalizedCommunityName: string;
+};
+
+export type UserProfilePost = Omit<
+  Post,
+  'isPostUpvoted' | 'isPostDownvoted' | 'isPostBookmarked'
+>;
+
+export type UserProfile = {
+  id: string;
+  email?: string;
+  totalCommentCredit: number;
+  totalPostCredit: number;
+  createdAt: Date;
 };
 
 export type Comment = {
@@ -59,7 +74,19 @@ export type Comment = {
   createdAt: Date;
 };
 
-export type Subscriber = {
-  user: User;
-  isModerator: boolean;
+export type SidebarUserCommunity = {
+  name: string;
+  normalizedName: string;
+};
+
+export type PaginatedPage<T> = {
+  data: Array<T>;
+  meta: {
+    nextCursor: string | null;
+  };
+};
+
+export type InfiniteData<T> = {
+  pages: Array<PaginatedPage<T>>;
+  pageParams: Array<string>;
 };

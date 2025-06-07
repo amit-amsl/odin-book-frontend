@@ -52,9 +52,11 @@ export function PostCreationRoute() {
     createPostMutation.mutate(
       { communityName, data: values },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          const { postId } = data;
+          console.log(postId);
           createPostMutation.reset();
-          navigate(`/c/${communityName}`);
+          navigate(`/c/${communityName}/${postId}`);
         },
         onError: (error: Error | AxiosError) => {
           if (axios.isAxiosError(error)) {
