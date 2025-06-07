@@ -29,7 +29,7 @@ import {
 } from '@/features/community/api/create-community';
 import { Textarea } from '@/components/ui/textarea';
 
-export function CommunityCreationRoute() {
+export default function CommunityCreationRoute() {
   const navigate = useNavigate();
 
   const createCommunityForm = useForm<createCommunityInput>({

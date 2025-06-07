@@ -12,7 +12,7 @@ import { Fragment, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
-export function CommunityRoute() {
+export default function CommunityRoute() {
   const params = useParams();
   const communityName = params.communityName as string;
 

@@ -9,7 +9,7 @@ import { Bookmarks } from '@/features/user/components/bookmarks';
 import { ProfileDetailsMobileView } from '@/features/user/components/profile-details-mobile';
 import { ProfileDetailsDesktopCard } from '@/features/user/components/profile-details-desktop';
 
-export function UserProfileRoute() {
+export default function UserProfileRoute() {
   const params = useParams();
   const userName = params.username as string;
   const { user } = useUser();

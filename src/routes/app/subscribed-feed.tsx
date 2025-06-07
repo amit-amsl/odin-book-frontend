@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Fragment } from 'react/jsx-runtime';
 
-export function SubscribedFeedRoute() {
+export default function SubscribedFeedRoute() {
   const subscribedCommunitiesFeedQuery = useInfiniteSubscribedCommunitiesFeed();
 
   const { ref, inView } = useInView();

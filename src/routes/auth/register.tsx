@@ -17,7 +17,7 @@ import { Alert, AlertTitle } from '@/components/ui/alert';
 import { useState } from 'react';
 import axios, { AxiosError } from 'axios';
 
-export function RegisterRoute() {
+export default function RegisterRoute() {
   const [serverError, setServerError] = useState('');
   const register = useRegister();
 

@@ -17,7 +17,7 @@ import { Alert, AlertTitle } from '@/components/ui/alert';
 import { useState } from 'react';
 import axios, { AxiosError } from 'axios';
 
-export function LoginRoute() {
+export default function LoginRoute() {
   const [serverError, setServerError] = useState('');
   const login = useLogin();
 

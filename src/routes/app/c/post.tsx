@@ -18,7 +18,7 @@ import parse from 'html-react-parser';
 import { usePostBookmark } from '@/features/post/api/bookmark-post';
 import { Badge } from '@/components/ui/badge';
 
-export function PostRoute() {
+export default function PostRoute() {
   const params = useParams();
   const communityName = params.communityName as string;
   const postId = params.postId as string;

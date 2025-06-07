@@ -30,7 +30,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useNavigate, useParams } from 'react-router';
 
-export function PostCreationRoute() {
+export default function PostCreationRoute() {
   const params = useParams();
   const communityName = params.communityName as string;
   const navigate = useNavigate();
