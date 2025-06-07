@@ -36,7 +36,8 @@ export function PostComment({ communityName, postId, comment }: CommentProps) {
 
   const commentVotingMutation = useCommentVote();
 
-  const shouldFetchReplies = comment._count.replies > 0 && isRepliesVisible;
+  const shouldFetchReplies =
+    !!comment.parentCommentId === false && isRepliesVisible;
 
   const commentRepliesQuery = useInfiniteCommentReplies(
     comment.id,

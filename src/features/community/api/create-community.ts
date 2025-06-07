@@ -1,6 +1,8 @@
 import { api } from '@/lib/api-client';
 import { z } from 'zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import { BaseResponse } from '@/types/api';
+import { toast } from 'sonner';
 
 export const createCommunityInputSchema = z.object({
   name: z
@@ -21,17 +23,17 @@ async function createCommunity({
   data,
 }: {
   data: createCommunityInput;
-}): Promise<any> {
+}): Promise<BaseResponse & { communityNormalizedName: string }> {
   return api.post('/community', data);
 }
 
 export const useCreateCommunity = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: createCommunity,
-    onSuccess: () => {
-      return queryClient.invalidateQueries({ queryKey: [''] }); // TODO: Update to correct key
+    onSuccess: (_, variables) => {
+      toast(
+        `Community c/${variables.data.name} has been created successfully!`
+      );
     },
   });
 };

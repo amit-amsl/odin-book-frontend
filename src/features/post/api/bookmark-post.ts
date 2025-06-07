@@ -1,6 +1,7 @@
 import { api } from '@/lib/api-client';
 import { BaseResponse, InfiniteData, Post } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 async function handlePostBookmark({
   communityName,
@@ -62,6 +63,10 @@ export const usePostBookmark = () => {
           isPostBookmarked,
         };
       });
+
+      toast(
+        `${isPostBookmarked ? 'Post saved to bookmarks' : 'Post removed from bookmarks'}`
+      );
     },
   });
 };

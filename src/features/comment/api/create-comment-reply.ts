@@ -2,6 +2,7 @@ import { api } from '@/lib/api-client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCommentInput } from './create-comment';
 import { Comment } from '@/types/api';
+import { toast } from 'sonner';
 import { CommentRepliesResponse } from './get-comment-replies';
 import { PostCommentsResponse } from './get-comments';
 
@@ -72,6 +73,7 @@ export const useCreateCommentReply = () => {
           })),
         };
       });
+      toast('Reply has been created successfully!');
     },
   });
 };

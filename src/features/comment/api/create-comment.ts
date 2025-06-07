@@ -2,6 +2,7 @@ import { api } from '@/lib/api-client';
 import { Comment, PostExtended } from '@/types/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
+import { toast } from 'sonner';
 import { PostCommentsResponse } from './get-comments';
 
 export const createCommentInputSchema = z.object({
@@ -59,6 +60,7 @@ export const useCreateComment = () => {
           },
         };
       });
+      toast('Comment has been created successfully!');
     },
   });
 };

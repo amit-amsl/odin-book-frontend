@@ -2,6 +2,7 @@ import { AuthResponse, BaseResponse, JwtPayload } from '@/types/api';
 import { api } from './api-client';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 const USER_KEY = 'auth-user' as const;
 
@@ -27,6 +28,7 @@ export const useLogin = () => {
     onSuccess: (data) => {
       const { user } = data;
       queryClient.setQueryData([USER_KEY], user);
+      toast('Logged in successfully!');
     },
   });
 };
@@ -85,6 +87,7 @@ export const useLogout = () => {
     onSuccess: () => {
       queryClient.setQueryData([USER_KEY], null);
       queryClient.invalidateQueries({ queryKey: [USER_KEY] });
+      toast('Logged out successfully!');
     },
   });
 };

@@ -1,6 +1,7 @@
 import { api } from '@/lib/api-client';
 import { BaseResponse } from '@/types/api';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 export const createPostInputSchema = z.object({
@@ -25,5 +26,8 @@ async function createComment({
 export const useCreatePost = () => {
   return useMutation({
     mutationFn: createComment,
+    onSuccess: () => {
+      toast(`Post has been created successfully!`);
+    },
   });
 };

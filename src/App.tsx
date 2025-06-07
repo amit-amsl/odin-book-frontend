@@ -112,7 +112,7 @@ function App() {
               <Route path="*" element={<Navigate to="/feed" />} />
             </Routes>
           </Suspense>
-          <Toaster />
+          <Toaster position="top-center" />
         </BrowserRouter>
       </ThemeProvider>
       {DEV_MODE && <ReactQueryDevtools initialIsOpen={false} />}
