@@ -56,6 +56,7 @@ export type UserProfile = {
   email?: string;
   totalCommentCredit: number;
   totalPostCredit: number;
+  avatarUrl: string;
   createdAt: Date;
 };
 

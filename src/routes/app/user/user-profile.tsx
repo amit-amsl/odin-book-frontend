@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useUserProfile } from '@/features/user/api/get-user-profile';
 import { useUser } from '@/lib/auth';
@@ -8,6 +8,7 @@ import { SubmittedPosts } from '@/features/user/components/submitted-posts';
 import { Bookmarks } from '@/features/user/components/bookmarks';
 import { ProfileDetailsMobileView } from '@/features/user/components/profile-details-mobile';
 import { ProfileDetailsDesktopCard } from '@/features/user/components/profile-details-desktop';
+import { ProfileEditDialog } from '@/features/user/components/profile-edit-dialog';
 
 export default function UserProfileRoute() {
   const params = useParams();
@@ -30,16 +31,22 @@ export default function UserProfileRoute() {
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
             <Avatar className="size-28">
-              {/* <AvatarImage src="https://b.thumbs.redditmedia.com/9aAIqRjSQwF2C7Xohx1u2Q8nAUqmUsHqdYtAlhQZsgE.png" /> */}
+              <AvatarImage src={userProfile.avatarUrl} />
               <AvatarFallback className="text-5xl">TD</AvatarFallback>
             </Avatar>
-            <div>
+            <div className="flex flex-col gap-2">
               <h1 className="text-2xl font-semibold tracking-tight">
                 {userName}
               </h1>
               <span className="text-muted-foreground text-sm">
                 u/{userName}
               </span>
+              {isProfileOfCurrentUser && (
+                <ProfileEditDialog
+                  username={user?.username}
+                  avatarUrl={userProfile.avatarUrl}
+                />
+              )}
             </div>
           </div>
           <ProfileDetailsMobileView
