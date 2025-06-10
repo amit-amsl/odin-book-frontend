@@ -54,6 +54,9 @@ export default function CommunityCreationRoute() {
         onError: (error: Error | AxiosError) => {
           if (axios.isAxiosError(error)) {
             console.log(error);
+            createCommunityForm.setError('name', {
+              message: error.response?.data.message,
+            });
           }
         },
       }
