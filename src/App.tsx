@@ -50,23 +50,23 @@ const queryClient = new QueryClient({
 });
 const DEV_MODE = true;
 
+const GlobalAppLoader = () => (
+  <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+    <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-16 animate-bounce items-center justify-center rounded-lg">
+      <Bot className="size-12" />
+    </div>
+    <p className="scroll-m-20 text-2xl font-semibold tracking-tight">
+      Loading app...
+    </p>
+  </div>
+);
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <BrowserRouter>
-          <Suspense
-            fallback={
-              <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-16 animate-bounce items-center justify-center rounded-lg">
-                  <Bot className="size-12" />
-                </div>
-                <p className="scroll-m-20 text-2xl font-semibold tracking-tight">
-                  Loading app...
-                </p>
-              </div>
-            }
-          >
+          <Suspense fallback={<GlobalAppLoader />}>
             <Routes>
               <Route
                 path="login"

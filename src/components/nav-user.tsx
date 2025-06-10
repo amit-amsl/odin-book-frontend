@@ -7,7 +7,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,8 +49,7 @@ export function NavUser() {
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback> */}
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">theRealJohndoe</span>
-                <span className="truncate text-xs">john@doe.com</span>
+                <span className="truncate font-medium">{user?.username}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -65,12 +64,13 @@ export function NavUser() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={'user.avatar'} alt={'theRealJohndoe'} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                    {/* <AvatarImage src={'user.avatar'} alt={'theRealJohndoe'} /> */}
+                    <AvatarFallback className="rounded-lg">TD</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">theRealJohndoe</span>
-                    <span className="truncate text-xs">john@doe.com</span>
+                    <span className="truncate font-medium">
+                      {user?.username}
+                    </span>
                   </div>
                 </div>
                 <ModeToggle toggleLocation="afterAuth" />

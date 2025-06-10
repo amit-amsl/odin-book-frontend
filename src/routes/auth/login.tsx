@@ -1,5 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoginInput, loginInputSchema, useLogin } from '@/lib/auth';
+import {
+  LoginInput,
+  loginInputSchema,
+  useGuestLogin,
+  useLogin,
+} from '@/lib/auth';
 import { useForm } from 'react-hook-form';
 import {
   Form,
@@ -21,6 +26,7 @@ import { ModeToggle } from '@/components/mode-toggle';
 export default function LoginRoute() {
   const [serverError, setServerError] = useState('');
   const login = useLogin();
+  const guestLogin = useGuestLogin();
 
   const loginForm = useForm<LoginInput>({
     resolver: zodResolver(loginInputSchema),
@@ -47,7 +53,7 @@ export default function LoginRoute() {
   return (
     <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <ModeToggle toggleLocation="beforeAuth" />
-      <div className="w-full max-w-sm">
+      <div className="flex w-full max-w-sm flex-col gap-2">
         <Form {...loginForm}>
           <form onSubmit={loginForm.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6">
@@ -117,6 +123,20 @@ export default function LoginRoute() {
             </div>
           </form>
         </Form>
+        <Button
+          variant={'outline'}
+          disabled={guestLogin.isPending}
+          onClick={() => guestLogin.mutate()}
+        >
+          {guestLogin.isPending ? (
+            <>
+              <Loader2 className="animate-spin" />
+              Please wait
+            </>
+          ) : (
+            'Guest login'
+          )}
+        </Button>
       </div>
       {serverError && (
         <Alert variant="destructive" className="max-w-sm">

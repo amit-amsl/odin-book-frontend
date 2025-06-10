@@ -33,6 +33,22 @@ export const useLogin = () => {
   });
 };
 
+async function guestLogin(): Promise<AuthResponse> {
+  return api.post('/auth/guest-login');
+}
+
+export const useGuestLogin = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: guestLogin,
+    onSuccess: (data) => {
+      const { user } = data;
+      queryClient.setQueryData([USER_KEY], user);
+      toast('Logged in successfully!');
+    },
+  });
+};
+
 export const registerInputSchema = z
   .object({
     email: z.string().trim().email('Invalid email address format'),
