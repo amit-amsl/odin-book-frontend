@@ -1,6 +1,6 @@
 import { api } from '@/lib/api-client';
 import { z } from 'zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { BaseResponse } from '@/types/api';
 import { toast } from 'sonner';
 
@@ -28,9 +28,14 @@ async function createCommunity({
 }
 
 export const useCreateCommunity = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: createCommunity,
     onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['user', 'sidebar-communities'],
+      });
       toast(
         `Community c/${variables.data.name} has been created successfully!`
       );

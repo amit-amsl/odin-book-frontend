@@ -40,7 +40,7 @@ export const useEditUserProfile = () => {
   return useMutation({
     mutationFn: editUserProfile,
     onSuccess: async (_, variables) => {
-      toast('User profile updated successfully!');
+      toast.success('User profile updated successfully!');
       return queryClient.invalidateQueries({
         queryKey: ['user', 'profile', variables.username],
       });

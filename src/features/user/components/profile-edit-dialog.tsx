@@ -130,9 +130,9 @@ export function ProfileEditDialog({
                           }}
                         />
                       </FormControl>
-                      <FormDescription>
-                        <span>Supported Image formats: PNG/JPEG/JPG</span>
-                        <span> Max Image size: 3MB</span>
+                      <FormDescription className="flex flex-col gap-2">
+                        <span>* Supported Image formats: PNG/JPEG/JPG</span>
+                        <span>* Max Image size: 3MB</span>
                       </FormDescription>
                       <FormMessage />
                     </FormItem>

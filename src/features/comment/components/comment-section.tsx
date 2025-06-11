@@ -3,6 +3,7 @@ import { useInfinitePostComments } from '../api/get-comments';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import { MessagesSquare } from 'lucide-react';
+import { SpinnerLoadingCircle } from '@/components/spinner-loading-circle';
 
 type CommentSectionProps = {
   communityName: string;
@@ -20,7 +21,12 @@ export function CommentSection({ communityName, postId }: CommentSectionProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView, postCommentsQuery.hasNextPage, postCommentsQuery.fetchNextPage]);
 
-  if (postCommentsQuery.isLoading) return <div>loading...</div>;
+  if (postCommentsQuery.isLoading)
+    return (
+      <div className="mt-5 flex justify-center">
+        <SpinnerLoadingCircle />
+      </div>
+    );
 
   const postComments = postCommentsQuery.data?.pages.flatMap(
     (page) => page.data

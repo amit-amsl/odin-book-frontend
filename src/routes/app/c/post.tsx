@@ -7,6 +7,7 @@ import {
   Share2,
   Bookmark,
   Undo2,
+  Bot,
 } from 'lucide-react';
 import { usePost } from '@/features/post/api/get-post';
 import { Link, useParams } from 'react-router';
@@ -17,6 +18,7 @@ import { CommentRTEditor } from '@/features/comment/components/comment-tiptap-ed
 import parse from 'html-react-parser';
 import { usePostBookmark } from '@/features/post/api/bookmark-post';
 import { Badge } from '@/components/ui/badge';
+import { SpinnerLoadingCircle } from '@/components/spinner-loading-circle';
 
 export default function PostRoute() {
   const params = useParams();
@@ -41,11 +43,29 @@ export default function PostRoute() {
     });
   };
 
-  if (postQuery.isLoading) return <div>loading...</div>;
+  if (postQuery.isLoading)
+    return (
+      <div className="mt-5 flex justify-center">
+        <SpinnerLoadingCircle />
+      </div>
+    );
 
   const post = postQuery.data;
 
-  if (!post) return null;
+  if (!post)
+    return (
+      <div className="mt-14 flex flex-col items-center justify-center gap-2 text-center">
+        <div className="bg-accent text-sidebar-primary flex aspect-square size-16 items-center justify-center rounded-lg">
+          <Bot className="size-12" />
+        </div>
+        <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight text-balance">
+          Post not found.
+        </h1>
+        <Button variant={'default'} className="mt-2" asChild>
+          <Link to={'/'}>Return to home</Link>
+        </Button>
+      </div>
+    );
 
   return (
     <div className="flex items-start gap-4 p-4">

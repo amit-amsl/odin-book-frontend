@@ -2,13 +2,20 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useUserProfile } from '@/features/user/api/get-user-profile';
 import { useUser } from '@/lib/auth';
-import { LockKeyhole, Bookmark, SquareChartGantt } from 'lucide-react';
-import { useParams } from 'react-router';
+import {
+  LockKeyhole,
+  Bookmark,
+  SquareChartGantt,
+  UserRoundX,
+} from 'lucide-react';
+import { Link, useParams } from 'react-router';
 import { SubmittedPosts } from '@/features/user/components/submitted-posts';
 import { Bookmarks } from '@/features/user/components/bookmarks';
 import { ProfileDetailsMobileView } from '@/features/user/components/profile-details-mobile';
 import { ProfileDetailsDesktopCard } from '@/features/user/components/profile-details-desktop';
 import { ProfileEditDialog } from '@/features/user/components/profile-edit-dialog';
+import { SpinnerLoadingCircle } from '@/components/spinner-loading-circle';
+import { Button } from '@/components/ui/button';
 
 export default function UserProfileRoute() {
   const params = useParams();
@@ -19,11 +26,28 @@ export default function UserProfileRoute() {
 
   const userProfileQuery = useUserProfile(userName);
 
-  if (userProfileQuery.isLoading) return <div>loading...</div>;
+  if (userProfileQuery.isLoading)
+    return (
+      <div className="mt-5 flex justify-center">
+        <SpinnerLoadingCircle />
+      </div>
+    );
 
   const userProfile = userProfileQuery.data;
 
-  if (!userProfile) return null;
+  if (!userProfile)
+    return (
+      <div className="mt-14 flex flex-col items-center justify-center gap-2 text-center">
+        <UserRoundX size={56} />
+        <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight text-balance">
+          Sorry, nobody on Tidder goes by that name.
+        </h1>
+        <p>This account may have been banned or the username is incorrect.</p>
+        <Button variant={'default'} className="mt-2" asChild>
+          <Link to={'/'}>Return to home</Link>
+        </Button>
+      </div>
+    );
 
   return (
     <div className="flex justify-between gap-3 p-3">

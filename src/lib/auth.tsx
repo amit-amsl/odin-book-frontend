@@ -28,7 +28,7 @@ export const useLogin = () => {
     onSuccess: (data) => {
       const { user } = data;
       queryClient.setQueryData([USER_KEY], user);
-      toast('Logged in successfully!');
+      toast.success('Logged in successfully!');
     },
   });
 };
@@ -44,7 +44,7 @@ export const useGuestLogin = () => {
     onSuccess: (data) => {
       const { user } = data;
       queryClient.setQueryData([USER_KEY], user);
-      toast('Logged in successfully!');
+      toast.success('Guest user logged in successfully!');
     },
   });
 };
@@ -89,6 +89,9 @@ async function register(data: RegisterInput): Promise<BaseResponse> {
 export const useRegister = () =>
   useMutation({
     mutationFn: register,
+    onSuccess: () => {
+      toast.success('New account created successfully!');
+    },
   });
 
 async function logout(): Promise<void> {
@@ -103,7 +106,7 @@ export const useLogout = () => {
     onSuccess: () => {
       queryClient.setQueryData([USER_KEY], null);
       queryClient.invalidateQueries({ queryKey: [USER_KEY] });
-      toast('Logged out successfully!');
+      toast.success('Logged out successfully!');
     },
   });
 };
