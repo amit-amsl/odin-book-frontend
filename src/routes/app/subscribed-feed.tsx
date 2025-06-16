@@ -9,9 +9,25 @@ import { Fragment } from 'react/jsx-runtime';
 import { Telescope } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
+import { useSearchParams } from 'react-router';
+import { SortByQueryParam } from '@/types/api';
+import { SortBySelectionList } from '@/features/community/components/sort-by-select';
+import { useUserCommunities } from '@/features/user/api/get-user-communities';
 
 export default function SubscribedFeedRoute() {
-  const subscribedCommunitiesFeedQuery = useInfiniteSubscribedCommunitiesFeed();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sortOptionSelected = (searchParams.get('sort') ??
+    'new') as SortByQueryParam;
+
+  const handleSortSelection = (value: SortByQueryParam) => {
+    searchParams.set('sort', value);
+    setSearchParams(searchParams);
+  };
+
+  const subscribedCommunitiesFeedQuery =
+    useInfiniteSubscribedCommunitiesFeed(sortOptionSelected);
+
+  const userCommunitiesQuery = useUserCommunities();
 
   const { ref, inView } = useInView();
 
@@ -32,11 +48,13 @@ export default function SubscribedFeedRoute() {
       </div>
     );
 
-  const communitiesFeed = subscribedCommunitiesFeedQuery.data?.pages.flatMap(
+  const subCommunitiesFeed = subscribedCommunitiesFeedQuery.data?.pages.flatMap(
     (page) => page.data
   );
 
-  if (!communitiesFeed?.length)
+  const userCommunities = userCommunitiesQuery.data;
+
+  if (!subCommunitiesFeed?.length && !userCommunities)
     return (
       <div className="mt-10 flex flex-col items-center justify-center gap-3 p-2 text-center">
         <Telescope size={56} />
@@ -55,21 +73,35 @@ export default function SubscribedFeedRoute() {
 
   return (
     <ScrollArea>
-      <div className="flex flex-col gap-2 p-2">
-        <Separator className="" />
-        {communitiesFeed.map((post) => (
-          <Fragment key={post.id}>
-            <PostFeedView key={post.id} post={post} location="feed" />
+      <SortBySelectionList
+        sortOptionSelected={sortOptionSelected}
+        handleSortSelection={handleSortSelection}
+      />
+      {!subCommunitiesFeed?.length ? (
+        <div className="mt-10 flex flex-col items-center justify-center gap-3 p-2 text-center">
+          <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">
+            No posts available...
+          </h1>
+        </div>
+      ) : (
+        <>
+          <div className="flex flex-col gap-2 p-2">
             <Separator className="" />
-          </Fragment>
-        ))}
-      </div>
-      {/* Intersection Observer trigger */}
-      <div ref={ref} className="mb-3 flex items-center justify-center">
-        {subscribedCommunitiesFeedQuery.isFetchingNextPage && (
-          <p>Loading more posts...</p>
-        )}
-      </div>
+            {subCommunitiesFeed?.map((post) => (
+              <Fragment key={post.id}>
+                <PostFeedView key={post.id} post={post} location="feed" />
+                <Separator className="" />
+              </Fragment>
+            ))}
+          </div>
+          {/* Intersection Observer trigger */}
+          <div ref={ref} className="mb-3 flex items-center justify-center">
+            {subscribedCommunitiesFeedQuery.isFetchingNextPage && (
+              <p>Loading more posts...</p>
+            )}
+          </div>
+        </>
+      )}
     </ScrollArea>
   );
 }

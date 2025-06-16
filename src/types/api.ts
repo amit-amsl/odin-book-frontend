@@ -91,3 +91,5 @@ export type InfiniteData<T> = {
   pages: Array<PaginatedPage<T>>;
   pageParams: Array<string>;
 };
+
+export type SortByQueryParam = 'new' | 'trending_day' | 'trending_week' | 'top';
