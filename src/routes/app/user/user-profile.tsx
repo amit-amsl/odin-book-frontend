@@ -56,7 +56,9 @@ export default function UserProfileRoute() {
           <div className="flex items-center gap-4">
             <Avatar className="size-28">
               <AvatarImage src={userProfile.avatarUrl} />
-              <AvatarFallback className="text-5xl">TD</AvatarFallback>
+              <AvatarFallback className="text-5xl">
+                {userName.toUpperCase().slice(0, 2)}
+              </AvatarFallback>
             </Avatar>
             <div className="flex flex-col gap-2">
               <h1 className="text-2xl font-semibold tracking-tight">

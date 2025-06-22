@@ -35,7 +35,7 @@ export function NavUser() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu modal={false}>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
@@ -45,8 +45,6 @@ export function NavUser() {
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Bot className="size-6" />
                 </div>
-                {/* <AvatarImage src={'user.avatar'} alt={'theRealJohndoe'} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback> */}
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user?.username}</span>
@@ -64,8 +62,9 @@ export function NavUser() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    {/* <AvatarImage src={'user.avatar'} alt={'theRealJohndoe'} /> */}
-                    <AvatarFallback className="rounded-lg">TD</AvatarFallback>
+                    <AvatarFallback className="rounded-lg">
+                      {user?.username.toUpperCase().slice(0, 2)}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium">

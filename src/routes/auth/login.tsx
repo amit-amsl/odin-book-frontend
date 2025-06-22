@@ -142,9 +142,6 @@ export default function LoginRoute() {
         <Alert variant="destructive" className="max-w-sm">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle className="line-clamp-none">{serverError}</AlertTitle>
-          {/* <AlertDescription>
-          Your session has expired. Please log in again.
-        </AlertDescription> */}
         </Alert>
       )}
       <div className="text-muted-foreground hover:[&_a]:text-primary text-center text-xs text-balance [&_a]:underline [&_a]:underline-offset-4">

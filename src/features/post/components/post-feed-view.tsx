@@ -36,7 +36,7 @@ export function PostFeedView({ post, location }: PostFeedViewProps) {
       key={post.id}
       onClick={() => navigate(`/c/${post.communityNormalizedName}/${post.id}`)}
     >
-      <PostThumbnail />
+      <PostThumbnail isPostNSFW={post.isNSFW} isPostSpoiler={post.isSpoiler} />
       <div className="sm:max-md:hover:bg-accent/50 flex grow gap-2 rounded-lg p-3 text-left transition-colors md:rounded-none md:p-0 md:transition-none">
         <div className="flex flex-col items-start gap-2">
           <div className="flex items-center gap-1">
@@ -60,7 +60,9 @@ export function PostFeedView({ post, location }: PostFeedViewProps) {
               {formatDate(post.createdAt)}
             </time>
           </div>
-          <div className="font-semibold tracking-tight sm:text-base">
+          <div
+            className={`font-semibold tracking-tight sm:text-base ${(post.isNSFW || post.isSpoiler) && 'blur-xs'}`}
+          >
             {post.title}
           </div>
           <div className="flex gap-2">
@@ -81,7 +83,7 @@ export function PostFeedView({ post, location }: PostFeedViewProps) {
               onClick={(e) => e.stopPropagation()}
             >
               <Button
-                className="group cursor-pointer"
+                className="group cursor-pointer rounded-2xl"
                 variant={'ghost'}
                 size={'icon'}
                 onClick={(e) => handlePostVote(e, 'up')}
@@ -93,14 +95,14 @@ export function PostFeedView({ post, location }: PostFeedViewProps) {
                   )}
                 />
               </Button>
-              <span className="text-sm font-semibold tabular-nums">
+              <p className="text-sm font-semibold tabular-nums">
                 {calculateTotalVotes(
                   post._count.upvotes,
                   post._count.downvotes
                 )}
-              </span>
+              </p>
               <Button
-                className="group cursor-pointer"
+                className="group cursor-pointer rounded-2xl"
                 variant={'ghost'}
                 size={'icon'}
                 onClick={(e) => handlePostVote(e, 'down')}
@@ -117,7 +119,8 @@ export function PostFeedView({ post, location }: PostFeedViewProps) {
               className="text-muted-foreground hover:bg-muted-foreground/20 cursor-pointer text-xs"
               variant={'ghost'}
             >
-              {post._count.comments} comments
+              {post._count.comments} comment
+              {post._count.comments === 1 ? '' : 's'}
             </Button>
             <Button
               className="text-muted-foreground hover:bg-muted-foreground/20 cursor-pointer text-xs"

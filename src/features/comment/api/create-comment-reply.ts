@@ -17,7 +17,10 @@ async function createCommentReply({
   commentId: string;
   data: createCommentInput;
 }): Promise<Comment> {
-  return api.post(`/post/${communityName}/${postId}/${commentId}/reply`, data);
+  return api.post(
+    `/comments/${communityName}/${postId}/${commentId}/reply`,
+    data
+  );
 }
 
 export const useCreateCommentReply = () => {

@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Collapsible,
   CollapsibleContent,
@@ -78,10 +78,13 @@ export function PostComment({ communityName, postId, comment }: CommentProps) {
     <Collapsible defaultOpen key={comment.id}>
       <CollapsibleTrigger className="flex items-center gap-1">
         <Avatar className="size-8">
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={comment.author.profile_img_url} />
+          <AvatarFallback>
+            {comment.author.username.toUpperCase().slice(0, 2)}
+          </AvatarFallback>
         </Avatar>
         <Link
-          to={`u/${comment.author.username}`}
+          to={`/user/${comment.author.username}`}
           className="text-xs font-semibold hover:underline"
           onClick={(e) => e.stopPropagation()}
         >

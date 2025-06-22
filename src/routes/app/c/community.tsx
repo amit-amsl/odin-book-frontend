@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useCommunity } from '@/features/community/api/get-community';
 import { useCommunitySubscribe } from '@/features/community/api/subscribe-community';
@@ -11,6 +10,7 @@ import { useInView } from 'react-intersection-observer';
 import { Fragment, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import Avatar from 'boring-avatars';
 
 export default function CommunityRoute() {
   const params = useParams();
@@ -57,7 +57,7 @@ export default function CommunityRoute() {
           Community not found.
         </h1>
         <p className="max-w-md">
-          There aren’t any communities on Reddit with that name. Double-check
+          There aren’t any communities on Tidder with that name. Double-check
           the community name or try searching for similar communities.
         </p>
         <Button variant={'default'} className="mt-2" asChild>
@@ -69,31 +69,33 @@ export default function CommunityRoute() {
   return (
     <div>
       <header className="bg-muted flex flex-col shadow-sm">
-        <div className="h-48 w-full p-3">
-          <img
-            className="h-full w-full rounded-sm object-cover"
-            src="https://styles.redditmedia.com/t5_2s7cz/styles/bannerBackgroundImage_27yjhkspg7se1.jpg"
-            alt=""
+        <div className="relative h-48 w-full overflow-hidden p-3">
+          <Avatar
+            className="h-full w-full rounded-sm"
+            name={communityName}
+            variant="marble"
+            square
+            preserveAspectRatio="none"
+            colors={['#84b295', '#eccf8d', '#bb8138', '#ac2005', '#2c1507']}
           />
         </div>
         <div className="relative flex gap-4 p-4">
-          <Avatar className="md:border-muted size-16 md:absolute md:top-[-60px] md:left-10 md:size-24 md:border-[5px]">
-            <AvatarImage src="https://b.thumbs.redditmedia.com/9aAIqRjSQwF2C7Xohx1u2Q8nAUqmUsHqdYtAlhQZsgE.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <Avatar
+            name={communityName}
+            className="md:border-muted size-16 md:absolute md:top-[-60px] md:left-10 md:size-24 md:rounded-full md:border-[5px]"
+            variant="pixel"
+            colors={['#84b295', '#eccf8d', '#bb8138', '#ac2005', '#2c1507']}
+          />
           <div className="flex flex-1 flex-col gap-2 md:mt-5 md:flex-row md:justify-between">
             <div className="flex flex-col gap-1">
               <h1 className="text-2xl font-semibold md:text-4xl">
                 c/{communityName}
               </h1>
-              <p>{community.description}</p>
-              <div className="flex gap-3 text-xs md:text-sm">
-                <p>{community.subscribersAmount} members</p>
-                <p className="space-x-1">
-                  <span className="inline-flex size-2 rounded-full bg-green-400"></span>
-                  <span>N/A online</span>
-                </p>
-              </div>
+              <p className="text-sm">{community.description}</p>
+              <p className="flex gap-3 text-xs md:text-sm">
+                {community.subscribersAmount} member
+                {community.subscribersAmount === 1 ? '' : 's'}
+              </p>
               {community.isUserModerator && (
                 <Badge variant="destructive">Moderator</Badge>
               )}

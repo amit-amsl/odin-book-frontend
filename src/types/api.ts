@@ -62,7 +62,7 @@ export type UserProfile = {
 
 export type Comment = {
   id: string;
-  author: User;
+  author: User & { profile_img_url: string };
   parentCommentId: string | null;
   content: string;
   _count: {

@@ -28,7 +28,6 @@ async function editUserProfile({
   data: editUserProfileInput;
   username: string;
 }): Promise<BaseResponse> {
-  // TODO: Fix Promise type
   return api.patch(`/user/${username}/edit`, data, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });

@@ -61,13 +61,7 @@ export function ProfileEditDialog({
         onSuccess: () => {
           editUserProfileForm.reset();
           setIsDialogOpen(false);
-          //navigate(`/c/${values.name}`);
         },
-        // onError: (error: Error | AxiosError) => {
-        //   if (axios.isAxiosError(error)) {
-        //     console.log(error);
-        //   }
-        // },
       }
     );
   }
@@ -106,7 +100,9 @@ export function ProfileEditDialog({
                 ) : (
                   <AvatarImage src={avatarUrl || imagePreview || undefined} />
                 )}
-                <AvatarFallback className="text-5xl">TD</AvatarFallback>
+                <AvatarFallback className="text-5xl">
+                  {username.toUpperCase().slice(0, 2)}
+                </AvatarFallback>
               </Avatar>
               <div className="grid gap-3">
                 <FormField

@@ -1,9 +1,23 @@
-import { ScanText } from 'lucide-react';
+import { DiamondMinus, EyeOff, ScanText } from 'lucide-react';
 
-export function PostThumbnail() {
+type PostThumbnailProps = {
+  isPostNSFW: boolean;
+  isPostSpoiler: boolean;
+};
+
+export function PostThumbnail({
+  isPostNSFW,
+  isPostSpoiler,
+}: PostThumbnailProps) {
   return (
-    <div className="bg-secondary hidden h-[76px] w-[102px] items-center justify-center rounded-lg border md:flex">
-      <ScanText className="stroke-muted-foreground" />
+    <div className="bg-secondary hidden h-[76px] w-[102px] shrink-0 items-center justify-center rounded-lg border md:flex">
+      {isPostNSFW ? (
+        <DiamondMinus className="text-red-500" />
+      ) : isPostSpoiler ? (
+        <EyeOff className="stroke-muted-foreground" />
+      ) : (
+        <ScanText className="stroke-muted-foreground" />
+      )}
     </div>
   );
 }
