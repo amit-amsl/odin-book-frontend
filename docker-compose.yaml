@@ -1,0 +1,12 @@
+services:
+  tidder-frontend:
+    image: tidder-frontend
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_APP_API_URL: ${VITE_APP_API_URL}
+    env_file: '.env'
+    ports:
+      - '8000:80'
