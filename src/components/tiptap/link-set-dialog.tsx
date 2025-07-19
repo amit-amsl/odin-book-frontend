@@ -20,17 +20,25 @@ type LinkSetDialogProps = {
 
 export function LinkSetDialog({ editor }: LinkSetDialogProps) {
   const [url, setUrl] = useState(editor.getAttributes('link').href);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleLinkSet = () => {
     if (url === '') {
       editor.chain().focus().extendMarkRange('link').unsetLink().run();
+      setIsDialogOpen(!isDialogOpen);
       return;
     }
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+    setIsDialogOpen(!isDialogOpen);
   };
 
   return (
-    <Dialog>
+    <Dialog
+      open={isDialogOpen}
+      onOpenChange={(open) => {
+        setIsDialogOpen(open);
+      }}
+    >
       <DialogTrigger asChild>
         <Button variant="ghost" size={'icon'} type="button">
           <Link2 />

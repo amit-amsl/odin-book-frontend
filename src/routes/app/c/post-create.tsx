@@ -25,7 +25,7 @@ import {
   createPostInputSchema,
   useCreatePost,
 } from '@/features/post/api/create-post';
-import { DiamondMinus, EyeOff, Loader2, X } from 'lucide-react';
+import { EyeOff, Loader2, X } from 'lucide-react';
 import { TipTapRTEditor } from '@/components/tiptap/editor';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -33,6 +33,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useRef, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import ReactPlayer from 'react-player';
+import { IconNSFW18plus } from '@/components/nfsw-icon';
 
 const postTypeOptions = [
   {
@@ -296,7 +297,7 @@ export default function PostCreationRoute() {
                   render={({ field }) => (
                     <FormItem className="flex items-center justify-between space-x-4 rounded-md border p-4">
                       <FormLabel>
-                        <DiamondMinus className="text-red-500" />
+                        <IconNSFW18plus absolutePosition={false} />
                         <div className="flex-1 space-y-1">
                           <p className="text-sm leading-none font-medium">
                             Mark post as NSFW (18+)

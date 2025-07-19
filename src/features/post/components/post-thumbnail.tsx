@@ -1,4 +1,5 @@
-import { DiamondMinus, EyeOff, PlayCircle, ScanText } from 'lucide-react';
+import { IconNSFW18plus } from '@/components/nfsw-icon';
+import { EyeOff, PlayCircle, ScanText } from 'lucide-react';
 
 type PostThumbnailProps = {
   isPostNSFW: boolean;
@@ -15,6 +16,8 @@ export function PostThumbnail({
   youtubeVideoId,
   isMobile,
 }: PostThumbnailProps) {
+  const shouldBlur = isPostNSFW || isPostSpoiler;
+
   if (youtubeVideoId) {
     return (
       <div
@@ -22,14 +25,14 @@ export function PostThumbnail({
       >
         <img
           src={`https://img.youtube.com/vi/${youtubeVideoId}/hqdefault.jpg`}
-          className={`rounded-lg ${isPostNSFW || isPostSpoiler ? 'blur-sm' : ''}`}
+          className={`rounded-lg ${shouldBlur ? 'blur-xs' : ''}`}
         />
         {isPostNSFW ? (
-          <DiamondMinus className="absolute text-red-500" />
+          <IconNSFW18plus absolutePosition />
         ) : isPostSpoiler ? (
           <EyeOff className="absolute" />
         ) : (
-          <PlayCircle className="absolute" />
+          <PlayCircle className="absolute text-white" />
         )}
       </div>
     );
@@ -43,12 +46,12 @@ export function PostThumbnail({
         <img
           src={imageUrl.replace(
             '/upload/',
-            `/upload/c_thumb,w_102,h_76${isPostNSFW || isPostSpoiler ? ',e_blur:400' : ''}/`
+            `/upload/c_thumb,w_102,h_76${shouldBlur ? ',e_blur:400' : ''}/`
           )}
           className="rounded-lg"
         />
         {isPostNSFW ? (
-          <DiamondMinus className="absolute text-red-500" />
+          <IconNSFW18plus absolutePosition />
         ) : isPostSpoiler ? (
           <EyeOff className="absolute" />
         ) : (
@@ -64,7 +67,7 @@ export function PostThumbnail({
     >
       {imageUrl && <img src={imageUrl} />}
       {isPostNSFW ? (
-        <DiamondMinus className="text-red-500" />
+        <IconNSFW18plus absolutePosition />
       ) : isPostSpoiler ? (
         <EyeOff className="stroke-muted-foreground" />
       ) : (
