@@ -28,6 +28,8 @@ export type Post = {
   id: string;
   title: string;
   author: User;
+  image_url: string | null;
+  youtube_vid_id: string | null;
   isNSFW: boolean;
   isSpoiler: boolean;
   isPostBookmarked: boolean;

@@ -12,8 +12,10 @@ import {
   Code,
   Minus,
   Quote,
+  Link2Off,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LinkSetDialog } from './link-set-dialog';
 
 export function RTEditorMenuBar({ editor }: { editor: Editor | null }) {
   if (!editor) return null;
@@ -102,6 +104,16 @@ export function RTEditorMenuBar({ editor }: { editor: Editor | null }) {
         type="button"
       >
         <ListOrdered />
+      </Button>
+      <LinkSetDialog editor={editor} />
+      <Button
+        variant="ghost"
+        size={'icon'}
+        onClick={() => editor.chain().focus().unsetLink().run()}
+        disabled={!editor.isActive('link')}
+        type="button"
+      >
+        <Link2Off />
       </Button>
       <Button
         variant="ghost"

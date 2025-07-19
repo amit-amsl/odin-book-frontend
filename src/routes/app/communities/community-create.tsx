@@ -43,7 +43,6 @@ export default function CommunityCreationRoute() {
   const createCommunityMutation = useCreateCommunity();
 
   function onSubmit(values: createCommunityInput) {
-    console.log(values);
     createCommunityMutation.mutate(
       { data: values },
       {
@@ -53,7 +52,6 @@ export default function CommunityCreationRoute() {
         },
         onError: (error: Error | AxiosError) => {
           if (axios.isAxiosError(error)) {
-            console.log(error);
             createCommunityForm.setError('name', {
               message: error.response?.data.message,
             });

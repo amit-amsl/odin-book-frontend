@@ -1,5 +1,6 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useEffect } from 'react';
 import { RTEditorMenuBar } from './menu-bar';
@@ -20,6 +21,10 @@ export function TipTapRTEditor({
       StarterKit,
       Placeholder.configure({
         placeholder: 'Write down here...',
+      }),
+      Link.configure({
+        defaultProtocol: 'https',
+        protocols: ['http', 'https'],
       }),
     ],
     content: value,

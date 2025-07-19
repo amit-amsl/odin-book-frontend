@@ -19,6 +19,7 @@ import parse from 'html-react-parser';
 import { usePostBookmark } from '@/features/post/api/bookmark-post';
 import { Badge } from '@/components/ui/badge';
 import { SpinnerLoadingCircle } from '@/components/spinner-loading-circle';
+import ReactPlayer from 'react-player';
 
 export default function PostRoute() {
   const params = useParams();
@@ -70,7 +71,7 @@ export default function PostRoute() {
   return (
     <div className="flex items-start gap-4 p-4">
       <Link
-        to={`/c/${communityName}`}
+        to={-1 as never}
         className="bg-secondary hover:bg-secondary/40 hidden rounded-xl p-1 md:block"
       >
         <Undo2 />
@@ -118,6 +119,24 @@ export default function PostRoute() {
                 {post.isSpoiler && <Badge variant="default">SPOILER</Badge>}
               </div>
             </div>
+            {post.image_url && (
+              <div className="flex">
+                <img
+                  className="rounded-md"
+                  src={post.image_url.replace(
+                    '/upload/',
+                    '/upload/f_auto,q_auto/'
+                  )}
+                />
+              </div>
+            )}
+            {post.youtube_vid_id && (
+              <ReactPlayer
+                src={`https://www.youtube.com/watch?v=${post.youtube_vid_id}`}
+                style={{ width: '100%', height: 'auto', aspectRatio: '16/9' }}
+                controls
+              />
+            )}
             <div className="dark:prose-invert prose prose-headings:mt-2 prose-headings:mb-1 prose-headings:font-semibold prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:marker:text-foreground max-w-2xl text-sm">
               {post.content ? parse(post.content) : ''}
             </div>

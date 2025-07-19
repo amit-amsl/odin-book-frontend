@@ -36,7 +36,6 @@ export function CommentRTEditor({
   });
 
   function onSubmit(values: createCommentInput) {
-    console.log(values);
     createCommentMutation.mutate(
       { communityName, postId, data: values },
       {

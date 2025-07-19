@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   editUserProfileInput,
   editUserProfileInputSchema,
@@ -29,6 +29,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { SpinnerLoadingCircle } from '@/components/spinner-loading-circle';
+import { X } from 'lucide-react';
 type ProfileEditDialogProps = {
   username: string;
   avatarUrl: string;
@@ -40,6 +41,8 @@ export function ProfileEditDialog({
 }: ProfileEditDialogProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
 
   const editUserProfileForm = useForm<editUserProfileInput>({
     resolver: zodResolver(editUserProfileInputSchema),
@@ -51,7 +54,6 @@ export function ProfileEditDialog({
   const editUserProfileMutation = useEditUserProfile();
 
   function onSubmit(values: editUserProfileInput) {
-    console.log(values);
     editUserProfileMutation.mutate(
       {
         username,
@@ -92,36 +94,67 @@ export function ProfileEditDialog({
         <Form {...editUserProfileForm}>
           <form onSubmit={editUserProfileForm.handleSubmit(onSubmit)}>
             <div className="grid gap-4">
-              <Avatar className="size-28">
-                {editUserProfileMutation.isPending ? (
-                  <div className="flex w-full items-center justify-center">
-                    <SpinnerLoadingCircle />
-                  </div>
-                ) : (
-                  <AvatarImage src={avatarUrl || imagePreview || undefined} />
-                )}
-                <AvatarFallback className="text-5xl">
-                  {username.toUpperCase().slice(0, 2)}
-                </AvatarFallback>
-              </Avatar>
               <div className="grid gap-3">
                 <FormField
                   control={editUserProfileForm.control}
                   name="avatar"
                   render={({ field: { onChange, ...field } }) => (
                     <FormItem>
+                      <div className="flex flex-col items-center justify-center gap-3">
+                        <Avatar className="size-28">
+                          {editUserProfileMutation.isPending ? (
+                            <div className="flex w-full items-center justify-center">
+                              <SpinnerLoadingCircle />
+                            </div>
+                          ) : (
+                            <AvatarImage
+                              src={imagePreview || avatarUrl || undefined}
+                            />
+                          )}
+                          <AvatarFallback className="text-5xl">
+                            {username.toUpperCase().slice(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        {imagePreview && (
+                          <Button
+                            type="button"
+                            size={'sm'}
+                            className="bg-red-500 p-1 text-white transition-colors hover:bg-red-600"
+                            onClick={() => {
+                              onChange(null);
+                              setCurrentFile(null);
+                              setImagePreview(null);
+                              if (fileInputRef.current) {
+                                fileInputRef.current.value = '';
+                              }
+                            }}
+                          >
+                            <X size={16} />
+                            Remove selection
+                          </Button>
+                        )}
+                      </div>
                       <FormLabel>Avatar</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
+                          ref={fileInputRef}
                           type="file"
                           disabled={editUserProfileMutation.isPending}
+                          accept="image/png, image/jpg, image/jpeg"
                           value={undefined}
-                          onChange={(event) => {
-                            const avatarFile = event.target.files?.[0];
+                          onChange={(e) => {
+                            const avatarFile = e.target.files?.[0];
                             if (avatarFile) {
                               onChange(avatarFile);
+                              setCurrentFile(avatarFile);
                               setImagePreview(URL.createObjectURL(avatarFile));
+                            } else {
+                              if (currentFile && fileInputRef.current) {
+                                const dt = new DataTransfer();
+                                dt.items.add(currentFile);
+                                fileInputRef.current.files = dt.files;
+                              }
                             }
                           }}
                         />
