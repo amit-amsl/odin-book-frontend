@@ -11,6 +11,7 @@ import { Fragment, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import Avatar from 'boring-avatars';
+import { LogoPatternCoverBackground } from '@/components/logo-pattern-cover';
 
 export default function CommunityRoute() {
   const params = useParams();
@@ -69,15 +70,8 @@ export default function CommunityRoute() {
   return (
     <div>
       <header className="bg-muted flex flex-col shadow-sm">
-        <div className="relative h-48 w-full overflow-hidden p-3">
-          <Avatar
-            className="h-full w-full rounded-sm"
-            name={communityName}
-            variant="marble"
-            square
-            preserveAspectRatio="none"
-            colors={['#84b295', '#eccf8d', '#bb8138', '#ac2005', '#2c1507']}
-          />
+        <div className="relative h-32 w-full overflow-hidden p-1">
+          <LogoPatternCoverBackground />
         </div>
         <div className="relative flex gap-4 p-4">
           <Avatar

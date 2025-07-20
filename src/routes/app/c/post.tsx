@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Avatar from 'boring-avatars';
 import { Button } from '@/components/ui/button';
 import {
   ArrowBigUp,
@@ -79,10 +79,12 @@ export default function PostRoute() {
       <div className="flex w-full max-w-2xl flex-col gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex gap-1.5">
-            <Avatar className="size-8">
-              <AvatarImage src="https://b.thumbs.redditmedia.com/9aAIqRjSQwF2C7Xohx1u2Q8nAUqmUsHqdYtAlhQZsgE.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            <Avatar
+              name={communityName}
+              className="size-8"
+              variant="pixel"
+              colors={['#84b295', '#eccf8d', '#bb8138', '#ac2005', '#2c1507']}
+            />
             <div className="flex flex-col">
               <div className="flex gap-1">
                 <Link
@@ -207,7 +209,11 @@ export default function PostRoute() {
           </div>
         </div>
         <CommentRTEditor postId={postId} communityName={communityName} />
-        <CommentSection communityName={communityName} postId={postId} />
+        <CommentSection
+          communityName={communityName}
+          postId={postId}
+          postAuthor={post.author}
+        />
       </div>
     </div>
   );

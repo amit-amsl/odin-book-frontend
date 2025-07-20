@@ -127,6 +127,7 @@ export default function PostCreationRoute() {
               <RadioGroup.Item
                 key={option.value}
                 value={option.value}
+                disabled={createPostMutation.isPending}
                 className="ring-border rounded px-2 py-1 ring-[1px] data-[state=checked]:ring-2 data-[state=checked]:ring-blue-500"
               >
                 <span className="font-semibold tracking-tight">

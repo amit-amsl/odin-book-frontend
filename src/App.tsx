@@ -47,7 +47,7 @@ const queryClient = new QueryClient({
     },
   },
 });
-const DEV_MODE = true;
+const DEV_MODE = false;
 
 const GlobalAppLoader = () => (
   <div className="flex min-h-screen flex-col items-center justify-center gap-4">

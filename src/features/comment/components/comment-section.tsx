@@ -4,13 +4,19 @@ import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import { MessagesSquare } from 'lucide-react';
 import { SpinnerLoadingCircle } from '@/components/spinner-loading-circle';
+import { User } from '@/types/api';
 
 type CommentSectionProps = {
   communityName: string;
   postId: string;
+  postAuthor: User;
 };
 
-export function CommentSection({ communityName, postId }: CommentSectionProps) {
+export function CommentSection({
+  communityName,
+  postId,
+  postAuthor,
+}: CommentSectionProps) {
   const postCommentsQuery = useInfinitePostComments(communityName, postId);
 
   const { ref, inView } = useInView();
@@ -54,6 +60,7 @@ export function CommentSection({ communityName, postId }: CommentSectionProps) {
           comment={comment}
           communityName={communityName}
           postId={postId}
+          postAuthor={postAuthor}
         />
       ))}
       <div ref={ref} className="mb-3 flex items-center justify-center">

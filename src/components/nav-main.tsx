@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from './ui/sidebar';
 import { Home, ChartNoAxesColumnIncreasing } from 'lucide-react';
 
@@ -16,11 +16,13 @@ const items = [
 ];
 
 export function NavMain() {
+  const location = useLocation();
+
   return (
     <SidebarMenu className="p-2">
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton asChild>
+          <SidebarMenuButton asChild isActive={location.pathname === item.url}>
             <NavLink to={item.url}>
               <item.icon />
               <span>{item.title}</span>

@@ -19,10 +19,12 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from './ui/collapsible';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { useUserCommunities } from '@/features/user/api/get-user-communities';
 
 export function AppSidebar() {
+  const location = useLocation();
+
   const userCommunitiesQuery = useUserCommunities();
 
   const userCommunities = userCommunitiesQuery.data;
@@ -65,7 +67,13 @@ export function AppSidebar() {
                     {userCommunities &&
                       userCommunities.map((community) => (
                         <SidebarMenuItem key={community.normalizedName}>
-                          <SidebarMenuButton asChild>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={
+                              location.pathname ===
+                              `/c/${community.normalizedName}`
+                            }
+                          >
                             <Link to={`/c/${community.normalizedName}`}>
                               <Boxes />
                               <span className="text-lg font-semibold">

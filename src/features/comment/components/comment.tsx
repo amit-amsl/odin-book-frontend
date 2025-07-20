@@ -15,7 +15,7 @@ import {
   CornerDownRight,
 } from 'lucide-react';
 import { calculateTotalVotes, cn, formatDate } from '@/lib/utils';
-import { Comment } from '@/types/api';
+import { Comment, User } from '@/types/api';
 import { useCommentVote } from '../api/vote-comment';
 import { Link } from 'react-router';
 import { useState } from 'react';
@@ -27,10 +27,15 @@ type CommentProps = {
   communityName: string;
   postId: string;
   comment: Comment;
-  children?: React.ReactNode;
+  postAuthor: User;
 };
 
-export function PostComment({ communityName, postId, comment }: CommentProps) {
+export function PostComment({
+  communityName,
+  postId,
+  comment,
+  postAuthor,
+}: CommentProps) {
   const [isReplyEditorVisible, setReplyEditorVisibility] = useState(false);
   const [isRepliesVisible, setRepliesVisibility] = useState(false);
 
@@ -48,6 +53,7 @@ export function PostComment({ communityName, postId, comment }: CommentProps) {
     (page) => page.data
   );
 
+  const isCommentByOP = comment.author.id === postAuthor.id;
   const isUserUpvoted = !!comment.upvotes.length;
   const isUserDownvoted = !!comment.downvotes.length;
   const isReplyComment = !!comment.parentCommentId;
@@ -90,6 +96,7 @@ export function PostComment({ communityName, postId, comment }: CommentProps) {
         >
           {comment.author.username}
         </Link>
+        {isCommentByOP && <span className="text-xs text-sky-600">OP</span>}
         <span>•</span>
         <time className="text-muted-foreground text-xs">
           {formatDate(comment.createdAt)}
@@ -172,6 +179,7 @@ export function PostComment({ communityName, postId, comment }: CommentProps) {
                 comment={reply}
                 postId={postId}
                 communityName={communityName}
+                postAuthor={postAuthor}
               />
             ))}
             {commentRepliesQuery.hasNextPage && (
