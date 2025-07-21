@@ -10,6 +10,33 @@ Tidder is a social media platform built as part of The Odin Project curriculum. 
 
 Deployed on [Render](https://render.com/).
 
+### Built With
+
+<a href="https://reactjs.org">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" height="40" alt="React">
+</a>
+<a href="https://vitejs.dev">
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" height="40" alt="Vite" />
+</a>
+<a href="https://react-query.tanstack.com">
+  <img src="https://img.shields.io/badge/React_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white" height="40" alt="React Query" />
+</a>
+<a href="https://reactrouter.com">
+  <img src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" height="40" alt="React Router" />
+</a>
+<a href="https://ui.shadcn.com/">
+  <img src="https://img.shields.io/badge/shadcn%2Fui-000?logo=shadcnui&logoColor=fff&style=for-the-badge" height="40" alt="ShadCN/ui" />
+</a>
+<a href="https://tailwindcss.com">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" height="40" alt="Tailwind CSS" />
+</a>
+<a href="https://react-hook-form.com/">
+  <img src="https://img.shields.io/badge/react--hook--form-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white" height="40" alt="React-Hook-Form" />
+</a>
+<a href="https://zod.dev/">
+  <img src="https://img.shields.io/badge/zod-%233068b7.svg?style=for-the-badge&logo=zod&logoColor=white" height="40" alt="Zod" />
+</a>
+
 ## Features
 
 - **User Profile**: Users can create their own profiles, and customize their profile picture.
